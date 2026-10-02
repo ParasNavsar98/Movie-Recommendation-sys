@@ -46,6 +46,7 @@ function Index() {
 
   const toggleSave = (id: string) => setSaved((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
   const closeMenu = () => setMenuOpen(false);
+  if (!suggested) return null;
 
   return (
     <main>
