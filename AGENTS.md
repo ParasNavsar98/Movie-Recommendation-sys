@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep the movie-discovery experience as a single frontend concept page with local demo interactions; there is no connected backend or persisted film data.
+- Keep the visual palette and typography in `src/styles.css` as semantic tokens so the editorial presentation remains consistent.
