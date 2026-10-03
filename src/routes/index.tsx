@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Heart, Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ViewerTestimonialWall } from "@/components/movieai/viewer-testimonial-wall";
 import { FilmCinematicWord } from "@/components/movieai/film-cinematic-word";
+import ShapeWaves from "@/components/ShapeWaves";
 import heroImage from "@/assets/cinematic-hero.jpg";
 import desertImage from "@/assets/cinematic-desert.jpg";
 import oceanImage from "@/assets/cinematic-ocean.jpg";
@@ -33,12 +34,24 @@ const films = [
 const moods = ["Wonder", "Feeling", "Intensity"];
 const genres = ["All films", "Sci-fi", "Adventure", "Drama", "Thriller"];
 
+const NAVBAR_SCROLL_THRESHOLD = 850;
+
 function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(false);
   const [mood, setMood] = useState("Wonder");
   const [genre, setGenre] = useState("All films");
   const [query, setQuery] = useState("");
   const [saved, setSaved] = useState<string[]>([]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowNavbar(window.scrollY > NAVBAR_SCROLL_THRESHOLD);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const suggested = films.find((film) => film.mood === mood) ?? films[0];
   const visibleFilms = useMemo(() => films.filter((film) =>
@@ -52,7 +65,13 @@ function Index() {
 
   return (
     <main>
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-[#111111]/10 bg-[#F7F7F3]/65 backdrop-blur-xl">
+      <header
+        className={`fixed left-0 right-0 top-0 z-50 border-b border-[#111111]/10 bg-[#F7F7F3]/65 backdrop-blur-xl transition-all duration-300 ease-in-out ${
+          showNavbar
+            ? "translate-y-0 opacity-100 pointer-events-auto"
+            : "-translate-y-full opacity-0 pointer-events-none"
+        }`}
+      >
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 md:px-10">
           <a href="#top" onClick={closeMenu} aria-label="MOVIEAI home" className="flex items-center gap-2 text-[22px] font-bold leading-none">
             <span className="inline-block h-3 w-3 bg-primary" aria-hidden="true" /> MOVIEAI<span className="text-signal">.</span>
@@ -77,30 +96,39 @@ function Index() {
         </nav>}
       </header>
 
-      <section id="top" className="relative isolate flex min-h-[660px] items-end overflow-hidden bg-foreground text-hero-foreground md:min-h-[760px]">
-        <img src={heroImage} width={1536} height={1024} alt="A figure beneath a monumental arch looks toward an eclipse over the sea" className="hero-image absolute inset-0 -z-20 h-full w-full" />
+      <section id="top" className="relative isolate flex min-h-[660px] items-end overflow-hidden bg-foreground text-hero-foreground md:min-h-[900px]">
         <div className="hero-shade absolute inset-0 -z-10" />
-        <div className="mx-auto grid w-full max-w-[1600px] gap-8 px-5 pb-12 pt-32 md:grid-cols-[1fr_220px] md:items-end md:px-10 md:pb-16">
-          <div className="reveal">
-            <div className="technical mb-7 flex items-center gap-3 text-hero-foreground"><span className="h-2 w-2 bg-primary" /> A new way to find your next film <span className="opacity-60">/ 001</span></div>
-            <h1 className="display max-w-[1100px] text-[clamp(3.7rem,8.3vw,9.5rem)]">Movies made<br />for <em className="font-normal not-italic text-primary">your</em> taste.</h1>
-            <div className="mt-9 flex flex-col gap-6 md:flex-row md:items-center md:gap-12">
-              <Button variant="editorial" size="lg" asChild className="h-14 w-fit px-7 font-mono text-[11px] uppercase"><a href="#your-taste">Start discovering <ArrowUpRight /></a></Button>
-              <p className="max-w-[300px] text-sm leading-relaxed text-hero-foreground/85">The best film for tonight isn't the same for everyone. Find the one that feels like you.</p>
-            </div>
-          </div>
-          <a href="#intro" className="technical hidden items-center justify-end gap-3 self-end pb-2 transition-colors hover:text-primary md:flex">Scroll to explore <ArrowDown size={16} /></a>
+
+        <div className="absolute inset-0 z-10 pointer-events-none">
+          <ShapeWaves
+            text="MOVIEAi"
+            color="#929292"
+            hoverColor="#ffffff"
+            backgroundColor="transparent"
+            shapes="mixed"
+            cellSize={10}
+            dotSize={0.75}
+            textSize={0.6}
+            speed={1}
+            scale={1}
+            contrast={1}
+            brightness={0.4}
+            flow={0}
+            direction={0}
+            fade={0.25}
+            interactive
+            splashRadius={40}
+            splashStrength={0.4}
+            glow={0.35}
+            intro
+            introDuration={1.6}
+            paused={false}
+          />
         </div>
-        <div className="absolute right-5 top-6 hidden border border-hero-foreground/50 px-3 py-2 text-hero-foreground md:block"><span className="technical">An editorial film experience ↗</span></div>
+
+
       </section>
 
-      <section id="intro" className="site-grid border-b border-border py-7">
-        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-4 px-5 md:px-10">
-          <span className="technical text-muted-foreground">01 / The idea</span>
-          <p className="max-w-[770px] text-xl font-medium leading-snug md:text-[32px]">Less endless scrolling. <span className="text-muted-foreground">More movies that actually mean something to you.</span></p>
-          <span className="technical text-muted-foreground">Made for curious minds ↗</span>
-        </div>
-      </section>
 
       <section id="how-it-works" className="site-grid border-b border-border py-24 md:py-36 bg-white">
         <div className="mx-auto max-w-[1600px] px-5 md:px-10">
