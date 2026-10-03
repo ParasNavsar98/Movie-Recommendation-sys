@@ -23,8 +23,10 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   return <DemoContext.Provider value={{ name, email, selected, genres, setName, setEmail, setSelected, setGenres, reset }}>{children}</DemoContext.Provider>;
 }
 
+const noop = () => {};
+const fallback: DemoState = { name: "", email: "", selected: [], genres: [], setName: noop, setEmail: noop, setSelected: noop, setGenres: noop, reset: noop };
+
 export function useMovieDemo() {
-  const value = useContext(DemoContext);
-  if (!value) throw new Error("Movie demo context missing");
-  return value;
+  // Fallback keeps pages rendering if the provider is momentarily absent (e.g. during hot reload).
+  return useContext(DemoContext) ?? fallback;
 }
