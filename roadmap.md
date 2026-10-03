@@ -1,3 +1,3 @@
-- [ ] Add frontend-only login, signup, verification, recovery, reset, onboarding, and profile screens in the MOVIEAI theme.
-- [ ] Wire page navigation, validation, demo states, and cinematic animations without a backend.
-- [ ] Verify the full demo flow on desktop and mobile.
+- [x] Add frontend-only login, signup, verification, recovery, reset, onboarding, and profile screens in the MOVIEAI theme.
+- [x] Wire page navigation, validation, demo states, and cinematic animations without a backend.
+- [x] Verify the full demo flow on desktop and mobile.

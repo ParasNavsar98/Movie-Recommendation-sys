@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Heart, Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -60,9 +60,12 @@ function Index() {
             <a className="technical transition-colors hover:text-signal" href="#how-it-works">How it works</a>
             <a className="technical transition-colors hover:text-signal" href="#your-taste">Your taste</a>
           </nav>
-          <Button variant="editorialDark" size="lg" asChild className="hidden h-10 px-5 font-mono text-[10px] uppercase md:inline-flex">
-            <a href="#your-taste">Explore your taste <ArrowUpRight /></a>
-          </Button>
+          <div className="hidden items-center gap-5 md:flex">
+            <Link to="/login" className="technical transition-colors hover:text-signal">Log in</Link>
+            <Button variant="editorialDark" size="lg" asChild className="h-10 px-5 font-mono text-[10px] uppercase">
+              <Link to="/signup">Get started <ArrowUpRight /></Link>
+            </Button>
+          </div>
           <Button variant="ghost" size="icon" className="md:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X /> : <Menu />}
           </Button>

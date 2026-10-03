@@ -8,7 +8,7 @@ import { useMovieDemo } from "./demo-context";
 function usePending() {
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
-  const proceed = (to: "/verify" | "/", delay = 700) => {
+  const proceed = (to: "/verify" | "/onboarding" | "/profile", delay = 700) => {
     setBusy(true);
     window.setTimeout(() => { setBusy(false); navigate({ to }); }, delay);
   };
@@ -20,7 +20,7 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { busy, proceed } = usePending();
-  function submit(event: FormEvent) { event.preventDefault(); if (!validEmail(email)) return setError("Enter a valid email address."); if (!password) return setError("Enter your password."); setError(""); proceed("/"); }
+  function submit(event: FormEvent) { event.preventDefault(); if (!validEmail(email)) return setError("Enter a valid email address."); if (!password) return setError("Enter your password."); setError(""); proceed("/profile"); }
   return <AuthShell index="01" title="Welcome back." description="Pick up where your curiosity left off." aside="Every great story begins somewhere."><form onSubmit={submit} noValidate><TextField label="Email address" type="email" value={email} onChange={(value) => { setEmail(value); setError(""); }} placeholder="you@example.com" autoComplete="email" /><TextField label="Password" type="password" value={password} onChange={(value) => { setPassword(value); setError(""); }} autoComplete="current-password" />{error && <p role="alert" className="text-sm text-signal">{error}</p>}<div className="flex justify-end"><Link to="/forgot-password" className="technical border-b border-foreground pb-1 hover:text-signal">Forgot password?</Link></div><SubmitButton busy={busy}>Log in / preview profile</SubmitButton></form><DemoNotice /><p className="mt-9 text-sm text-muted-foreground">New to MOVIEAI? <Link to="/signup" className="font-semibold text-foreground underline underline-offset-4">Create an account</Link></p></AuthShell>;
 }
 
@@ -45,7 +45,7 @@ export function SignupPage() {
 export function VerifyPage() {
   const { email } = useMovieDemo(); const { busy, proceed } = usePending(); const [count, setCount] = useState(30); const [notice, setNotice] = useState("");
   useEffect(() => { if (count <= 0) return; const timer = window.setTimeout(() => setCount(count - 1), 1000); return () => window.clearTimeout(timer); }, [count]);
-  return <AuthShell index="03" title="Check your email." description="This is a preview of the verification step. No email has actually been sent." aside="The best discoveries are worth the wait."><div className="flex items-center gap-4 border-y border-border py-6"><Mail size={24} /><div><p className="technical text-muted-foreground">EMAIL ADDRESS</p><p className="mt-1 break-all text-lg">{email || "you@example.com"}</p></div></div><p className="mt-6 text-sm leading-relaxed text-muted-foreground">In a live account flow, a verification link would arrive in your inbox. Continue below to preview what happens next.</p><Button variant="editorialDark" onClick={() => proceed("/")} disabled={busy} className="mt-8 h-14 w-full justify-between px-5 font-mono text-[11px] uppercase">{busy ? "Opening…" : "Preview verified state"}<ArrowRight /></Button><Button variant="editorialOutline" disabled={count > 0} onClick={() => { setCount(30); setNotice("Preview only — no email was sent."); }} className="mt-3 h-12 w-full font-mono text-[11px] uppercase">{count > 0 ? `Resend available in ${count}s` : "Resend email"}</Button>{notice && <p role="status" className="mt-3 text-sm text-muted-foreground">{notice}</p>}<Link to="/signup" className="technical mt-6 inline-flex gap-2 border-b border-foreground pb-1"><ArrowLeft size={13} /> Change email</Link><DemoNotice /></AuthShell>;
+  return <AuthShell index="03" title="Check your email." description="This is a preview of the verification step. No email has actually been sent." aside="The best discoveries are worth the wait."><div className="flex items-center gap-4 border-y border-border py-6"><Mail size={24} /><div><p className="technical text-muted-foreground">EMAIL ADDRESS</p><p className="mt-1 break-all text-lg">{email || "you@example.com"}</p></div></div><p className="mt-6 text-sm leading-relaxed text-muted-foreground">In a live account flow, a verification link would arrive in your inbox. Continue below to preview what happens next.</p><Button variant="editorialDark" onClick={() => proceed("/onboarding")} disabled={busy} className="mt-8 h-14 w-full justify-between px-5 font-mono text-[11px] uppercase">{busy ? "Opening…" : "Preview verified state"}<ArrowRight /></Button><Button variant="editorialOutline" disabled={count > 0} onClick={() => { setCount(30); setNotice("Preview only — no email was sent."); }} className="mt-3 h-12 w-full font-mono text-[11px] uppercase">{count > 0 ? `Resend available in ${count}s` : "Resend email"}</Button>{notice && <p role="status" className="mt-3 text-sm text-muted-foreground">{notice}</p>}<Link to="/signup" className="technical mt-6 inline-flex gap-2 border-b border-foreground pb-1"><ArrowLeft size={13} /> Change email</Link><DemoNotice /></AuthShell>;
 }
 
 export function ForgotPage() {
