@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Heart, Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ViewerTestimonialWall } from "@/components/movieai/viewer-testimonial-wall";
+import { FilmCinematicWord } from "@/components/movieai/film-cinematic-word";
 import heroImage from "@/assets/cinematic-hero.jpg";
 import desertImage from "@/assets/cinematic-desert.jpg";
 import oceanImage from "@/assets/cinematic-ocean.jpg";
@@ -50,7 +52,7 @@ function Index() {
 
   return (
     <main>
-      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-[#111111]/10 bg-[#F7F7F3]/65 backdrop-blur-xl">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 md:px-10">
           <a href="#top" onClick={closeMenu} aria-label="MOVIEAI home" className="flex items-center gap-2 text-[22px] font-bold leading-none">
             <span className="inline-block h-3 w-3 bg-primary" aria-hidden="true" /> MOVIEAI<span className="text-signal">.</span>
@@ -100,7 +102,7 @@ function Index() {
         </div>
       </section>
 
-      <section id="how-it-works" className="site-grid border-b border-border py-24 md:py-36">
+      <section id="how-it-works" className="site-grid border-b border-border py-24 md:py-36 bg-white">
         <div className="mx-auto max-w-[1600px] px-5 md:px-10">
           <div className="mb-16 flex items-start justify-between gap-8 border-t border-foreground pt-5"><span className="technical">02 / The process</span><span className="technical text-muted-foreground">Simple by design</span></div>
           <div className="grid gap-12 md:grid-cols-[1.25fr_.75fr] md:gap-24">
@@ -113,9 +115,11 @@ function Index() {
         </div>
       </section>
 
+      <ViewerTestimonialWall />
+
       <section id="your-taste" className="bg-foreground py-24 text-hero-foreground md:py-32">
         <div className="mx-auto max-w-[1600px] px-5 md:px-10">
-          <div className="mb-14 flex justify-between border-t border-hero-foreground/30 pt-5"><span className="technical text-primary">03 / Your taste</span><span className="technical text-hero-foreground/50">An interactive preview</span></div>
+          <div className="mb-14 flex justify-between border-t border-hero-foreground/30 pt-5"><span className="technical text-primary">04 / Your taste</span><span className="technical text-hero-foreground/50">An interactive preview</span></div>
           <div className="grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
             <div>
               <h2 className="display max-w-[700px] text-[clamp(3.3rem,6vw,7.2rem)]">What are you<br /><span className="text-primary">in the mood</span><br />for?</h2>
@@ -138,7 +142,7 @@ function Index() {
 
       <section id="discover" className="site-grid py-24 md:py-32">
         <div className="mx-auto max-w-[1600px] px-5 md:px-10">
-          <div className="mb-12 flex justify-between border-t border-foreground pt-5"><span className="technical">04 / The collection</span><span className="technical text-muted-foreground">A selection to explore</span></div>
+          <div className="mb-12 flex justify-between border-t border-foreground pt-5"><span className="technical">05 / The collection</span><span className="technical text-muted-foreground">A selection to explore</span></div>
           <div className="mb-14 flex flex-col justify-between gap-8 md:flex-row md:items-end"><h2 className="display text-[clamp(3.3rem,6.3vw,7.4rem)]">Find your<br />next favorite<span className="text-signal">.</span></h2><p className="max-w-[290px] text-base leading-relaxed text-muted-foreground">A small collection of imagined films, each with a different feeling.</p></div>
           <div className="mb-8 flex flex-col justify-between gap-5 border-y border-border py-4 lg:flex-row lg:items-center">
             <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter films by genre">{genres.map((item) => <Button key={item} variant={genre === item ? "editorialDark" : "editorialOutline"} size="sm" className="h-10 shrink-0 px-4 font-mono text-[10px] uppercase" aria-pressed={genre === item} onClick={() => setGenre(item)}>{item}</Button>)}</div>
@@ -155,9 +159,9 @@ function Index() {
         </div>
       </section>
 
-      <section className="relative isolate flex min-h-[560px] items-center overflow-hidden bg-foreground text-hero-foreground"><img src={oceanImage} alt="A figure facing the sea and a distant lighthouse" width={1024} height={1280} loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" /><div className="hero-shade absolute inset-0 -z-10" /><div className="mx-auto w-full max-w-[1600px] px-5 py-24 md:px-10"><span className="technical text-primary">05 / Keep exploring</span><h2 className="display mt-8 max-w-[1000px] text-[clamp(3.6rem,7.2vw,8.5rem)]">The right story<br />finds you.</h2><p className="mt-7 max-w-[440px] text-lg text-hero-foreground/80">Somewhere out there is a film you'll never forget.</p><Button variant="editorial" size="lg" asChild className="mt-9 h-14 px-7 font-mono text-[11px] uppercase"><a href="#your-taste">Follow your taste <ArrowUpRight /></a></Button></div></section>
+      <section className="relative isolate flex min-h-[560px] items-center overflow-hidden bg-foreground text-hero-foreground"><img src={oceanImage} alt="A figure facing the sea and a distant lighthouse" width={1024} height={1280} loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" /><div className="hero-shade absolute inset-0 -z-10" /><div className="mx-auto w-full max-w-[1600px] px-5 py-24 md:px-10"><span className="technical text-primary">06 / Keep exploring</span><h2 className="display mt-8 max-w-[1000px] text-[clamp(3.6rem,7.2vw,8.5rem)]">The right story<br />finds you.</h2><p className="mt-7 max-w-[440px] text-lg text-hero-foreground/80">Somewhere out there is a film you'll never forget.</p><Button variant="editorial" size="lg" asChild className="mt-9 h-14 px-7 font-mono text-[11px] uppercase"><a href="#your-taste">Follow your taste <ArrowUpRight /></a></Button></div></section>
 
-      <footer className="overflow-hidden bg-background px-5 pt-16 md:px-10"><div className="mx-auto max-w-[1600px]"><div className="flex flex-col justify-between gap-10 border-t border-foreground pt-5 md:flex-row"><div><span className="technical">MOVIEAI / A movie discovery concept</span><p className="mt-5 max-w-[340px] text-sm leading-relaxed text-muted-foreground">A visual exploration of the stories we choose and the stories that choose us.</p></div><div className="flex gap-10"><a className="technical hover:underline" href="#discover">Discover</a><a className="technical hover:underline" href="#how-it-works">The process</a><a className="technical hover:underline" href="#top">Back to top ↑</a></div></div><div className="display mt-20 text-[clamp(5rem,18vw,19rem)] leading-[.75]">MOVIEAI<span className="text-signal">.</span></div><div className="mt-8 flex justify-between border-t border-border py-5"><span className="technical text-muted-foreground">© MOVIEAI / Frontend concept</span><span className="technical text-muted-foreground">Made for movie lovers</span></div></div></footer>
+      <FilmCinematicWord />
     </main>
   );
 }

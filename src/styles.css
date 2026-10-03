@@ -2,6 +2,26 @@
 @source "../src";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: 'Swizzy';
+  src: url('/fonts/699738264d998c4c042acfff_RL-Swizzy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Swizzy';
+  src: url('/fonts/695bc6699e9ebf7bc1099bd3_Swizzy-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-swizzy {
+  font-family: 'Swizzy', "Space Grotesk", sans-serif;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -76,7 +96,7 @@
 .film-card:hover .film-image { transform: scale(1.045); }
 .film-card:hover .film-arrow { transform: translate(3px,-3px); }
 .film-arrow { transition: transform 250ms ease; }
-.ticker { overflow: hidden; white-space: nowrap; }
+.ticker { overflow: hidden; white-space: nowrap; rotate: 1.1deg; }
 .ticker-track { display: inline-flex; min-width: max-content; animation: ticker 32s linear infinite; }
 .ticker-track span { padding-right: 3rem; }
 @keyframes ticker { to { transform: translateX(-50%); } }
@@ -91,4 +111,9 @@
   html { scroll-behavior: auto; }
   .ticker-track, .reveal { animation: none; }
   .film-image, .film-arrow { transition: none; }
+}
+
+.grid-background {
+  background-color: #f8f9fa;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='%23e0e0e0' stroke-width='1'/%3E%3C/svg%3E");
 }
