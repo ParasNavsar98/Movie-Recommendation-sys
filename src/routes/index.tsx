@@ -77,7 +77,7 @@ function Index() {
             <span className="inline-block h-3 w-3 bg-primary" aria-hidden="true" /> MOVIEAI<span className="text-signal">.</span>
           </a>
           <nav aria-label="Main navigation" className="hidden items-center gap-10 md:flex">
-            <a className="technical transition-colors hover:text-signal" href="#discover">Discover</a>
+            <Link className="technical transition-colors hover:text-signal" to="/discover">Discover</Link>
             <a className="technical transition-colors hover:text-signal" href="#how-it-works">How it works</a>
             <a className="technical transition-colors hover:text-signal" href="#your-taste">Your taste</a>
           </nav>

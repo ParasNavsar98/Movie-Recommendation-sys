@@ -86,7 +86,7 @@ export function CompletePage() {
       </div>
     </div>
     {done && <div className="reveal mt-14"><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{recs.map((f, i) => <div key={f.id} className="reveal" style={{ animationDelay: `${i * 90}ms` }}><div className="aspect-[4/5] overflow-hidden"><img src={f.image} alt="" className="h-full w-full object-cover" /></div><p className="mt-3 font-semibold">{f.title}</p><p className="technical text-muted-foreground">{f.genre} / ★ {f.rating}</p></div>)}</div>
-      <Button variant="editorialDark" asChild className="mt-10 h-14 justify-between gap-6 px-6 font-mono text-[11px] uppercase"><Link to="/">Explore my movies <ArrowUpRight /></Link></Button></div>}
+      <Button variant="editorialDark" asChild className="mt-10 h-14 justify-between gap-6 px-6 font-mono text-[11px] uppercase"><Link to="/discover">Explore my movies <ArrowUpRight /></Link></Button></div>}
   </StepShell>;
 }
 
