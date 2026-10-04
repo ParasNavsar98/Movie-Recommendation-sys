@@ -8,7 +8,7 @@ import { useMovieDemo } from "./demo-context";
 function usePending() {
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
-  const proceed = (to: "/verify" | "/onboarding" | "/profile", delay = 700) => {
+  const proceed = (to: "/verify" | "/onboarding" | "/profile" | "/discover", delay = 700) => {
     setBusy(true);
     window.setTimeout(() => { setBusy(false); navigate({ to }); }, delay);
   };
@@ -20,7 +20,7 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { busy, proceed } = usePending();
-  function submit(event: FormEvent) { event.preventDefault(); if (!validEmail(email)) return setError("Enter a valid email address."); if (!password) return setError("Enter your password."); setError(""); proceed("/profile"); }
+  function submit(event: FormEvent) { event.preventDefault(); if (!validEmail(email)) return setError("Enter a valid email address."); if (!password) return setError("Enter your password."); setError(""); proceed("/discover"); }
   return <AuthShell index="01" title="Welcome back." description="Pick up where your curiosity left off." aside="Every great story begins somewhere."><form onSubmit={submit} noValidate><TextField label="Email address" type="email" value={email} onChange={(value) => { setEmail(value); setError(""); }} placeholder="you@example.com" autoComplete="email" /><TextField label="Password" type="password" value={password} onChange={(value) => { setPassword(value); setError(""); }} autoComplete="current-password" />{error && <p role="alert" className="text-sm text-signal">{error}</p>}<div className="flex justify-end"><Link to="/forgot-password" className="technical border-b border-foreground pb-1 hover:text-signal">Forgot password?</Link></div><SubmitButton busy={busy}>Log in / preview profile</SubmitButton></form><DemoNotice /><p className="mt-9 text-sm text-muted-foreground">New to MOVIEAI? <Link to="/signup" className="font-semibold text-foreground underline underline-offset-4">Create an account</Link></p></AuthShell>;
 }
 
