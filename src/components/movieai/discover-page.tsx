@@ -161,7 +161,7 @@ function IconAction({ label, on, onClick, children }: { label: string; on: boole
   return <button onClick={onClick} aria-label={label} aria-pressed={on} title={label} className={`grid h-10 w-10 place-items-center rounded-lg transition-colors [&_svg]:size-4 ${on ? "text-primary [&_svg]:fill-primary/30" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>{children}</button>;
 }
 
-function MovieModal({ movie: m, lib, actions, onClose }: { movie: Movie; lib: Lib; actions: Actions; onClose: () => void }) {
+export function MovieModal({ movie: m, lib, actions, onClose }: { movie: Movie; lib: Lib; actions: Actions; onClose: () => void }) {
   const [playing, setPlaying] = useState(false);
   useEffect(() => { const k = (e: KeyboardEvent) => e.key === "Escape" && onClose(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [onClose]);
   const myRating = lib.ratings[m.id] ?? 0;
