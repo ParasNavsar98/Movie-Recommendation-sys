@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ViewerTestimonialWall } from "@/components/movieai/viewer-testimonial-wall";
 import { FilmCinematicWord } from "@/components/movieai/film-cinematic-word";
 import ShapeWaves from "@/components/ShapeWaves";
+import { movies as catalog } from "@/components/movieai/discover-data";
 import heroImage from "@/assets/cinematic-hero.jpg";
 import desertImage from "@/assets/cinematic-desert.jpg";
 import oceanImage from "@/assets/cinematic-ocean.jpg";
@@ -30,6 +31,8 @@ const films = [
   { id: "03", title: "Where We Go", genre: "Drama", mood: "Feeling", year: "2024", image: oceanImage, alt: "A woman looks toward a lighthouse across a stormy sea", note: "For stories that stay with you" },
   { id: "04", title: "Night Signal", genre: "Thriller", mood: "Intensity", year: "2025", image: cityImage, alt: "A lone figure walks through a rain-soaked city at night", note: "For the edge of your seat" },
 ];
+
+const movieIdFor = (title: string) => catalog.find((m) => m.title === title)?.id ?? "unknown";
 
 const moods = ["Wonder", "Feeling", "Intensity"];
 const genres = ["All films", "Sci-fi", "Adventure", "Drama", "Thriller"];
@@ -178,8 +181,8 @@ function Index() {
           </div>
           <div className="grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {visibleFilms.map((film) => <article className="film-card group" key={film.id}>
-              <div className="relative aspect-[3/4] overflow-hidden bg-muted"><img src={film.image} alt={film.alt} width={1024} height={1280} loading="lazy" className="film-image h-full w-full object-cover" /><span className="technical absolute left-3 top-3 bg-background px-2 py-1.5">{film.genre} / {film.year}</span><Button variant="editorialDark" size="icon" className="absolute bottom-3 right-3 h-10 w-10" onClick={() => toggleSave(film.id)} aria-label={saved.includes(film.id) ? `Remove ${film.title} from saved films` : `Save ${film.title}`} aria-pressed={saved.includes(film.id)} title={saved.includes(film.id) ? "Remove from saved films" : "Save film"}><Heart className={saved.includes(film.id) ? "fill-primary text-primary" : ""} /></Button></div>
-              <div className="flex items-start justify-between border-b border-foreground py-4"><div><span className="technical text-muted-foreground">No. {film.id} / {film.mood}</span><h3 className="mt-2 text-2xl font-semibold uppercase">{film.title}</h3></div><ArrowUpRight size={20} className="film-arrow mt-1" /></div>
+              <div className="relative aspect-[3/4] overflow-hidden bg-muted"><Link to="/movie/$movieId" params={{ movieId: movieIdFor(film.title) }} aria-label={`View ${film.title}`} className="block h-full w-full"><img src={film.image} alt={film.alt} width={1024} height={1280} loading="lazy" className="film-image h-full w-full object-cover" /></Link><span className="technical absolute left-3 top-3 bg-background px-2 py-1.5">{film.genre} / {film.year}</span><Button variant="editorialDark" size="icon" className="absolute bottom-3 right-3 h-10 w-10" onClick={() => toggleSave(film.id)} aria-label={saved.includes(film.id) ? `Remove ${film.title} from saved films` : `Save ${film.title}`} aria-pressed={saved.includes(film.id)} title={saved.includes(film.id) ? "Remove from saved films" : "Save film"}><Heart className={saved.includes(film.id) ? "fill-primary text-primary" : ""} /></Button></div>
+              <div className="flex items-start justify-between border-b border-foreground py-4"><div><span className="technical text-muted-foreground">No. {film.id} / {film.mood}</span><h3 className="mt-2 text-2xl font-semibold uppercase"><Link to="/movie/$movieId" params={{ movieId: movieIdFor(film.title) }} className="hover:text-signal">{film.title}</Link></h3></div><ArrowUpRight size={20} className="film-arrow mt-1" /></div>
             </article>)}
           </div>
           {visibleFilms.length === 0 && <div className="border-b border-border py-20 text-center"><p className="text-xl">No films match that search.</p><Button variant="link" onClick={() => { setQuery(""); setGenre("All films"); }}>Clear filters</Button></div>}
