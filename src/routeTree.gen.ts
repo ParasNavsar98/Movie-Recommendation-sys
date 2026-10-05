@@ -17,6 +17,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as VerifyRouteImport } from './routes/verify'
+import { Route as MovieMovieIdRouteImport } from './routes/movie.$movieId'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding.index'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding.complete'
 import { Route as OnboardingGenresRouteImport } from './routes/onboarding.genres'
@@ -61,6 +62,11 @@ const VerifyRoute = VerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MovieMovieIdRoute = MovieMovieIdRouteImport.update({
+  id: '/movie/$movieId',
+  path: '/movie/$movieId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
   id: '/onboarding/',
   path: '/onboarding/',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/verify': typeof VerifyRoute
+  '/movie/$movieId': typeof MovieMovieIdRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/onboarding/genres': typeof OnboardingGenresRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/verify': typeof VerifyRoute
+  '/movie/$movieId': typeof MovieMovieIdRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/onboarding/genres': typeof OnboardingGenresRoute
   '/onboarding': typeof OnboardingIndexRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/verify': typeof VerifyRoute
+  '/movie/$movieId': typeof MovieMovieIdRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/onboarding/genres': typeof OnboardingGenresRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/verify'
+    | '/movie/$movieId'
     | '/onboarding/complete'
     | '/onboarding/genres'
     | '/onboarding/'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/verify'
+    | '/movie/$movieId'
     | '/onboarding/complete'
     | '/onboarding/genres'
     | '/onboarding'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/verify'
+    | '/movie/$movieId'
     | '/onboarding/complete'
     | '/onboarding/genres'
     | '/onboarding/'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   VerifyRoute: typeof VerifyRoute
+  MovieMovieIdRoute: typeof MovieMovieIdRoute
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
   OnboardingGenresRoute: typeof OnboardingGenresRoute
   OnboardingIndexRoute: typeof OnboardingIndexRoute
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/movie/$movieId': {
+      id: '/movie/$movieId'
+      path: '/movie/$movieId'
+      fullPath: '/movie/$movieId'
+      preLoaderRoute: typeof MovieMovieIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding/': {
       id: '/onboarding/'
       path: '/onboarding'
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   VerifyRoute: VerifyRoute,
+  MovieMovieIdRoute: MovieMovieIdRoute,
   OnboardingCompleteRoute: OnboardingCompleteRoute,
   OnboardingGenresRoute: OnboardingGenresRoute,
   OnboardingIndexRoute: OnboardingIndexRoute,
