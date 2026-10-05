@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Film, Sparkles } from "lucide-react";
 import { viewerTestimonials } from "./viewer-testimonial-data";
 import { ViewerTestimonialCard } from "./viewer-testimonial-card";
+import { MaskGroup, MaskReveal } from "./mask-reveal";
 
 export function ViewerTestimonialWall() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +39,7 @@ export function ViewerTestimonialWall() {
   useEffect(() => {
     if (isReducedMotion) return;
 
-    let autoSpeed = 0.85; // Base auto scroll speed in px per frame
+    const autoSpeed = 0.85; // Base auto scroll speed in px per frame
 
     const tick = () => {
       if (trackRef.current && singleTrackRef.current) {
@@ -138,34 +139,41 @@ export function ViewerTestimonialWall() {
       className="grid-background relative flex min-h-[90vh] w-full flex-col justify-between overflow-hidden border-b border-border py-20 md:min-h-screen md:py-28"
     >
       {/* Editorial Header Section */}
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col items-center px-5 text-center md:px-10">
+      <MaskGroup className="mx-auto flex w-full max-w-[1600px] flex-col items-center px-5 text-center md:px-10">
         {/* Top Eyebrow Tag */}
-        <div className="technical mb-5 flex items-center justify-center gap-2 text-muted-foreground">
-          <span className="inline-block h-1.5 w-1.5 bg-primary" aria-hidden="true" />
-          <span>03 / WHAT VIEWERS ARE SAYING</span>
-        </div>
+        <MaskReveal delay={0}>
+          <div className="technical mb-5 flex items-center justify-center gap-2 text-muted-foreground">
+            <span className="inline-block h-1.5 w-1.5 bg-primary" aria-hidden="true" />
+            <span>03 / WHAT VIEWERS ARE SAYING</span>
+          </div>
+        </MaskReveal>
 
         {/* Display Headline */}
         <h2 className="display max-w-[1200px] text-[clamp(2.3rem,5.2vw,5.5rem)] text-foreground">
-          MOVIES AREN'T ONE-SIZE-FITS-ALL.
-          <br />
-          <span className="text-muted-foreground">
-            THEY SHOULDN'T BE RECOMMENDED THAT WAY EITHER.
-          </span>
+          <MaskReveal delay={120}>
+            <span>MOVIES AREN'T ONE-SIZE-FITS-ALL.</span>
+          </MaskReveal>
+          <MaskReveal delay={240}>
+            <span className="text-muted-foreground">
+              THEY SHOULDN'T BE RECOMMENDED THAT WAY EITHER.
+            </span>
+          </MaskReveal>
         </h2>
 
         {/* Center Accent Icon */}
-        <div className="mt-8 flex items-center justify-center gap-3">
-          <div className="h-px w-12 bg-border md:w-20" />
-          <div className="flex h-9 w-9 items-center justify-center rounded-none border border-foreground bg-foreground text-primary shadow-sm">
-            <Film className="h-4 w-4" />
+        <MaskReveal delay={360}>
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <div className="h-px w-12 bg-border md:w-20" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-none border border-foreground bg-foreground text-primary shadow-sm">
+              <Film className="h-4 w-4" />
+            </div>
+            <div className="h-px w-12 bg-border md:w-20" />
           </div>
-          <div className="h-px w-12 bg-border md:w-20" />
-        </div>
-      </div>
+        </MaskReveal>
+      </MaskGroup>
 
       {/* Draggable Testimonial Canvas Track */}
-      <div className="mt-14 w-full md:mt-20">
+      <MaskReveal delay={200} className="mt-14 w-full md:mt-20">
         {isReducedMotion ? (
           /* Reduced Motion Fallback */
           <div className="flex w-full gap-6 overflow-x-auto px-6 pb-6">
@@ -211,7 +219,7 @@ export function ViewerTestimonialWall() {
             </div>
           </div>
         )}
-      </div>
+      </MaskReveal>
 
       {/* Editorial Footer Caption */}
       <div className="mx-auto mt-12 flex w-full max-w-[1600px] items-center justify-between px-5 text-muted-foreground md:px-10">

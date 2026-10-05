@@ -4,6 +4,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight, Heart, Menu, Search, X } from "luc
 import { Button } from "@/components/ui/button";
 import { ViewerTestimonialWall } from "@/components/movieai/viewer-testimonial-wall";
 import { FilmCinematicWord } from "@/components/movieai/film-cinematic-word";
+import { MaskGroup, MaskReveal } from "@/components/movieai/mask-reveal";
 import ShapeWaves from "@/components/ShapeWaves";
 import heroImage from "@/assets/cinematic-hero.jpg";
 import desertImage from "@/assets/cinematic-desert.jpg";
@@ -96,6 +97,7 @@ function Index() {
         </nav>}
       </header>
 
+      {/* HERO SECTION WITH SHAPEWAVES AND MASK REVEAL */}
       <section id="top" className="relative isolate flex min-h-[660px] items-end overflow-hidden bg-foreground text-hero-foreground md:min-h-[900px]">
         <div className="hero-shade absolute inset-0 -z-10" />
 
@@ -126,68 +128,241 @@ function Index() {
           />
         </div>
 
-
       </section>
 
-
+      {/* HOW IT WORKS SECTION */}
       <section id="how-it-works" className="site-grid border-b border-border py-24 md:py-36 bg-white">
         <div className="mx-auto max-w-[1600px] px-5 md:px-10">
-          <div className="mb-16 flex items-start justify-between gap-8 border-t border-foreground pt-5"><span className="technical">02 / The process</span><span className="technical text-muted-foreground">Simple by design</span></div>
-          <div className="grid gap-12 md:grid-cols-[1.25fr_.75fr] md:gap-24">
-            <h2 className="display max-w-[850px] text-[clamp(3.3rem,6.6vw,7.6rem)]">You watch.<br />You feel.<br /><span className="text-signal">We learn.</span></h2>
-            <div className="flex flex-col justify-end"><p className="mb-12 max-w-[400px] text-lg leading-relaxed text-muted-foreground">The films you love say more than a genre ever could. Each choice paints a clearer picture of what moves you.</p><a href="#your-taste" className="technical group flex w-fit items-center gap-3 border-b border-foreground pb-2">Find your feeling <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></a></div>
-          </div>
-          <div className="mt-20 grid border-t border-border md:grid-cols-4">
-            {[["01", "Watch", "Find what catches your eye."], ["02", "React", "Keep what stays with you."], ["03", "Connect", "Notice the stories you return to."], ["04", "Discover", "See a new side of your taste."]].map(([num, title, copy]) => <div key={num} className="min-h-[190px] border-b border-border p-5 md:border-b-0 md:border-r md:last:border-r-0"><span className="technical text-signal">{num} / 04</span><h3 className="mt-12 text-2xl font-semibold uppercase">{title}</h3><p className="mt-2 text-sm text-muted-foreground">{copy}</p></div>)}
-          </div>
+          <MaskReveal delay={0}>
+            <div className="mb-16 flex items-start justify-between gap-8 border-t border-foreground pt-5">
+              <span className="technical">02 / The process</span>
+              <span className="technical text-muted-foreground">Simple by design</span>
+            </div>
+          </MaskReveal>
+
+          <MaskGroup className="grid gap-12 md:grid-cols-[1.25fr_.75fr] md:gap-24">
+            {/* How It Works Heading (Line-by-line reveal) */}
+            <h2 className="display max-w-[850px] text-[clamp(3.3rem,6.6vw,7.6rem)]">
+              <MaskReveal delay={0}><span>You watch.</span></MaskReveal>
+              <MaskReveal delay={120}><span>You feel.</span></MaskReveal>
+              <MaskReveal delay={240}><span className="text-signal">We learn.</span></MaskReveal>
+            </h2>
+
+            {/* How It Works Description & Link */}
+            <div className="flex flex-col justify-end">
+              <MaskReveal delay={300}>
+                <p className="mb-12 max-w-[400px] text-lg leading-relaxed text-muted-foreground">
+                  The films you love say more than a genre ever could. Each choice paints a clearer picture of what moves you.
+                </p>
+              </MaskReveal>
+              <MaskReveal delay={400}>
+                <a href="#your-taste" className="technical group flex w-fit items-center gap-3 border-b border-foreground pb-2">
+                  Find your feeling <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </a>
+              </MaskReveal>
+            </div>
+          </MaskGroup>
+
+          {/* Process Cards (Staggered Line/Grid Mask Reveal) */}
+          <MaskGroup className="mt-20 grid border-t border-border md:grid-cols-4">
+            {[
+              ["01", "Watch", "Find what catches your eye."],
+              ["02", "React", "Keep what stays with you."],
+              ["03", "Connect", "Notice the stories you return to."],
+              ["04", "Discover", "See a new side of your taste."]
+            ].map(([num, title, copy], index) => (
+              <MaskReveal key={num} delay={index * 120} className="min-h-[190px] border-b border-border p-5 md:border-b-0 md:border-r md:last:border-r-0">
+                <div>
+                  <span className="technical text-signal">{num} / 04</span>
+                  <h3 className="mt-12 text-2xl font-semibold uppercase">{title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{copy}</p>
+                </div>
+              </MaskReveal>
+            ))}
+          </MaskGroup>
         </div>
       </section>
 
+      {/* TESTIMONIALS SECTION */}
       <ViewerTestimonialWall />
 
+      {/* YOUR TASTE SECTION */}
       <section id="your-taste" className="bg-foreground py-24 text-hero-foreground md:py-32">
         <div className="mx-auto max-w-[1600px] px-5 md:px-10">
-          <div className="mb-14 flex justify-between border-t border-hero-foreground/30 pt-5"><span className="technical text-primary">04 / Your taste</span><span className="technical text-hero-foreground/50">An interactive preview</span></div>
+          <MaskReveal delay={0}>
+            <div className="mb-14 flex justify-between border-t border-hero-foreground/30 pt-5">
+              <span className="technical text-primary">04 / Your taste</span>
+              <span className="technical text-hero-foreground/50">An interactive preview</span>
+            </div>
+          </MaskReveal>
+
           <div className="grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
-            <div>
-              <h2 className="display max-w-[700px] text-[clamp(3.3rem,6vw,7.2rem)]">What are you<br /><span className="text-primary">in the mood</span><br />for?</h2>
-              <p className="mt-8 max-w-[440px] text-base leading-relaxed text-hero-foreground/65">A place to begin. Choose a feeling and see where it takes you.</p>
+            <MaskGroup>
+              {/* Your Taste Heading (Line-by-line reveal) */}
+              <h2 className="display max-w-[700px] text-[clamp(3.3rem,6vw,7.2rem)]">
+                <MaskReveal delay={0}><span>What are you</span></MaskReveal>
+                <MaskReveal delay={120}><span className="text-primary">in the mood</span></MaskReveal>
+                <MaskReveal delay={240}><span>for?</span></MaskReveal>
+              </h2>
+
+              {/* Your Taste Description */}
+              <MaskReveal delay={320}>
+                <p className="mt-8 max-w-[440px] text-base leading-relaxed text-hero-foreground/65">
+                  A place to begin. Choose a feeling and see where it takes you.
+                </p>
+              </MaskReveal>
+
+              {/* Mood Options (Staggered reveal) */}
               <div role="group" aria-label="Choose a mood" className="mt-12 max-w-[550px] border-t border-hero-foreground/30">
-                {moods.map((item, index) => <Button key={item} variant="ghost" onClick={() => setMood(item)} aria-pressed={mood === item} className={`flex h-[76px] w-full justify-between rounded-none border-b border-hero-foreground/30 px-0 text-hero-foreground hover:bg-transparent hover:text-primary ${mood === item ? "text-primary" : ""}`}><span className="flex items-center gap-6 text-2xl font-semibold uppercase"><span className="technical text-hero-foreground/45">0{index + 1}</span>{item}</span><ArrowUpRight /></Button>)}
+                {moods.map((item, index) => (
+                  <MaskReveal key={item} delay={400 + index * 100}>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setMood(item)}
+                      aria-pressed={mood === item}
+                      className={`flex h-[76px] w-full justify-between rounded-none border-b border-hero-foreground/30 px-0 text-hero-foreground hover:bg-transparent hover:text-primary ${
+                        mood === item ? "text-primary" : ""
+                      }`}
+                    >
+                      <span className="flex items-center gap-6 text-2xl font-semibold uppercase">
+                        <span className="technical text-hero-foreground/45">0{index + 1}</span>
+                        {item}
+                      </span>
+                      <ArrowUpRight />
+                    </Button>
+                  </MaskReveal>
+                ))}
               </div>
-            </div>
-            <div className="relative self-end">
-              <div className="mb-3 flex justify-between"><span className="technical text-primary">A film for your {mood.toLowerCase()}</span><span className="technical text-hero-foreground/45">Sample selection / 01</span></div>
-              <div className="relative aspect-[1.2] overflow-hidden bg-ink-soft md:aspect-[1.28]"><img key={suggested.id} src={suggested.image} alt={suggested.alt} width={1024} height={1280} className="h-full w-full object-cover" loading="lazy" /></div>
-              <div className="flex items-end justify-between border-b border-hero-foreground/30 py-5"><div><p className="technical mb-2 text-hero-foreground/50">Selected for you / concept preview</p><h3 className="text-3xl font-semibold uppercase md:text-4xl">{suggested.title}</h3></div><ArrowUpRight size={26} className="text-primary" /></div>
+            </MaskGroup>
+
+            <MaskReveal delay={200} className="relative self-end">
+              <div className="mb-3 flex justify-between">
+                <span className="technical text-primary">A film for your {mood.toLowerCase()}</span>
+                <span className="technical text-hero-foreground/45">Sample selection / 01</span>
+              </div>
+              <div className="relative aspect-[1.2] overflow-hidden bg-ink-soft md:aspect-[1.28]">
+                <img key={suggested.id} src={suggested.image} alt={suggested.alt} width={1024} height={1280} className="h-full w-full object-cover" loading="lazy" />
+              </div>
+              <div className="flex items-end justify-between border-b border-hero-foreground/30 py-5">
+                <div>
+                  <p className="technical mb-2 text-hero-foreground/50">Selected for you / concept preview</p>
+                  <h3 className="text-3xl font-semibold uppercase md:text-4xl">{suggested.title}</h3>
+                </div>
+                <ArrowUpRight size={26} className="text-primary" />
+              </div>
               <p className="mt-4 text-sm text-hero-foreground/65">{suggested.note}</p>
-            </div>
+            </MaskReveal>
           </div>
         </div>
       </section>
 
-      <div className="ticker border-b border-foreground bg-primary py-4 text-foreground" aria-hidden="true"><div className="ticker-track technical text-[12px] font-medium">{Array.from({ length: 8 }, (_, i) => <span key={i}>DISCOVER DIFFERENTLY ✳ FOLLOW YOUR CURIOSITY ✳ FIND YOUR NEXT FAVORITE ✳ </span>)}</div></div>
+      {/* TICKER */}
+      <div className="ticker border-b border-foreground bg-primary py-4 text-foreground" aria-hidden="true">
+        <div className="ticker-track technical text-[12px] font-medium">
+          {Array.from({ length: 8 }, (_, i) => (
+            <span key={i}>DISCOVER DIFFERENTLY ✳ FOLLOW YOUR CURIOSITY ✳ FIND YOUR NEXT FAVORITE ✳ </span>
+          ))}
+        </div>
+      </div>
 
+      {/* DISCOVER SECTION */}
       <section id="discover" className="site-grid py-24 md:py-32">
         <div className="mx-auto max-w-[1600px] px-5 md:px-10">
-          <div className="mb-12 flex justify-between border-t border-foreground pt-5"><span className="technical">05 / The collection</span><span className="technical text-muted-foreground">A selection to explore</span></div>
-          <div className="mb-14 flex flex-col justify-between gap-8 md:flex-row md:items-end"><h2 className="display text-[clamp(3.3rem,6.3vw,7.4rem)]">Find your<br />next favorite<span className="text-signal">.</span></h2><p className="max-w-[290px] text-base leading-relaxed text-muted-foreground">A small collection of imagined films, each with a different feeling.</p></div>
+          <MaskReveal delay={0}>
+            <div className="mb-12 flex justify-between border-t border-foreground pt-5">
+              <span className="technical">05 / The collection</span>
+              <span className="technical text-muted-foreground">A selection to explore</span>
+            </div>
+          </MaskReveal>
+
+          <MaskGroup className="mb-14 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <h2 className="display text-[clamp(3.3rem,6.3vw,7.4rem)]">
+              <MaskReveal delay={0}><span>Find your</span></MaskReveal>
+              <MaskReveal delay={120}><span>next favorite<span className="text-signal">.</span></span></MaskReveal>
+            </h2>
+            <MaskReveal delay={240}>
+              <p className="max-w-[290px] text-base leading-relaxed text-muted-foreground">
+                A small collection of imagined films, each with a different feeling.
+              </p>
+            </MaskReveal>
+          </MaskGroup>
+
           <div className="mb-8 flex flex-col justify-between gap-5 border-y border-border py-4 lg:flex-row lg:items-center">
-            <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter films by genre">{genres.map((item) => <Button key={item} variant={genre === item ? "editorialDark" : "editorialOutline"} size="sm" className="h-10 shrink-0 px-4 font-mono text-[10px] uppercase" aria-pressed={genre === item} onClick={() => setGenre(item)}>{item}</Button>)}</div>
-            <label className="flex h-10 items-center gap-3 border-b border-foreground lg:w-[250px]"><Search size={17} /><span className="sr-only">Search films</span><input className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground" placeholder="Search the collection" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
+            <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter films by genre">
+              {genres.map((item) => (
+                <Button key={item} variant={genre === item ? "editorialDark" : "editorialOutline"} size="sm" className="h-10 shrink-0 px-4 font-mono text-[10px] uppercase" aria-pressed={genre === item} onClick={() => setGenre(item)}>
+                  {item}
+                </Button>
+              ))}
+            </div>
+            <label className="flex h-10 items-center gap-3 border-b border-foreground lg:w-[250px]">
+              <Search size={17} />
+              <span className="sr-only">Search films</span>
+              <input className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground" placeholder="Search the collection" value={query} onChange={(event) => setQuery(event.target.value)} />
+            </label>
           </div>
+
           <div className="grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {visibleFilms.map((film) => <article className="film-card group" key={film.id}>
-              <div className="relative aspect-[3/4] overflow-hidden bg-muted"><img src={film.image} alt={film.alt} width={1024} height={1280} loading="lazy" className="film-image h-full w-full object-cover" /><span className="technical absolute left-3 top-3 bg-background px-2 py-1.5">{film.genre} / {film.year}</span><Button variant="editorialDark" size="icon" className="absolute bottom-3 right-3 h-10 w-10" onClick={() => toggleSave(film.id)} aria-label={saved.includes(film.id) ? `Remove ${film.title} from saved films` : `Save ${film.title}`} aria-pressed={saved.includes(film.id)} title={saved.includes(film.id) ? "Remove from saved films" : "Save film"}><Heart className={saved.includes(film.id) ? "fill-primary text-primary" : ""} /></Button></div>
-              <div className="flex items-start justify-between border-b border-foreground py-4"><div><span className="technical text-muted-foreground">No. {film.id} / {film.mood}</span><h3 className="mt-2 text-2xl font-semibold uppercase">{film.title}</h3></div><ArrowUpRight size={20} className="film-arrow mt-1" /></div>
-            </article>)}
+            {visibleFilms.map((film) => (
+              <article className="film-card group" key={film.id}>
+                <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+                  <img src={film.image} alt={film.alt} width={1024} height={1280} loading="lazy" className="film-image h-full w-full object-cover" />
+                  <span className="technical absolute left-3 top-3 bg-background px-2 py-1.5">{film.genre} / {film.year}</span>
+                  <Button variant="editorialDark" size="icon" className="absolute bottom-3 right-3 h-10 w-10" onClick={() => toggleSave(film.id)} aria-label={saved.includes(film.id) ? `Remove ${film.title} from saved films` : `Save ${film.title}`} aria-pressed={saved.includes(film.id)} title={saved.includes(film.id) ? "Remove from saved films" : "Save film"}>
+                    <Heart className={saved.includes(film.id) ? "fill-primary text-primary" : ""} />
+                  </Button>
+                </div>
+                <div className="flex items-start justify-between border-b border-foreground py-4">
+                  <div>
+                    <span className="technical text-muted-foreground">No. {film.id} / {film.mood}</span>
+                    <h3 className="mt-2 text-2xl font-semibold uppercase">{film.title}</h3>
+                  </div>
+                  <ArrowUpRight size={20} className="film-arrow mt-1" />
+                </div>
+              </article>
+            ))}
           </div>
-          {visibleFilms.length === 0 && <div className="border-b border-border py-20 text-center"><p className="text-xl">No films match that search.</p><Button variant="link" onClick={() => { setQuery(""); setGenre("All films"); }}>Clear filters</Button></div>}
+
+          {visibleFilms.length === 0 && (
+            <div className="border-b border-border py-20 text-center">
+              <p className="text-xl">No films match that search.</p>
+              <Button variant="link" onClick={() => { setQuery(""); setGenre("All films"); }}>Clear filters</Button>
+            </div>
+          )}
+
           <p className="technical mt-8 text-muted-foreground">Concept collection · Saved films stay on this page only ({saved.length})</p>
         </div>
       </section>
 
-      <section className="relative isolate flex min-h-[560px] items-center overflow-hidden bg-foreground text-hero-foreground"><img src={oceanImage} alt="A figure facing the sea and a distant lighthouse" width={1024} height={1280} loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" /><div className="hero-shade absolute inset-0 -z-10" /><div className="mx-auto w-full max-w-[1600px] px-5 py-24 md:px-10"><span className="technical text-primary">06 / Keep exploring</span><h2 className="display mt-8 max-w-[1000px] text-[clamp(3.6rem,7.2vw,8.5rem)]">The right story<br />finds you.</h2><p className="mt-7 max-w-[440px] text-lg text-hero-foreground/80">Somewhere out there is a film you'll never forget.</p><Button variant="editorial" size="lg" asChild className="mt-9 h-14 px-7 font-mono text-[11px] uppercase"><a href="#your-taste">Follow your taste <ArrowUpRight /></a></Button></div></section>
+      {/* FINAL CTA SECTION */}
+      <section className="relative isolate flex min-h-[560px] items-center overflow-hidden bg-foreground text-hero-foreground">
+        <img src={oceanImage} alt="A figure facing the sea and a distant lighthouse" width={1024} height={1280} loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
+        <div className="hero-shade absolute inset-0 -z-10" />
+
+        <MaskGroup className="mx-auto w-full max-w-[1600px] px-5 py-24 md:px-10">
+          <MaskReveal delay={0}>
+            <span className="technical text-primary">06 / Keep exploring</span>
+          </MaskReveal>
+
+          {/* Final CTA Heading (Line-by-line staggered reveal) */}
+          <h2 className="display mt-8 max-w-[1000px] text-[clamp(3.6rem,7.2vw,8.5rem)]">
+            <MaskReveal delay={120}><span>The right story</span></MaskReveal>
+            <MaskReveal delay={240}><span>finds you.</span></MaskReveal>
+          </h2>
+
+          <MaskReveal delay={360}>
+            <p className="mt-7 max-w-[440px] text-lg text-hero-foreground/80">
+              Somewhere out there is a film you'll never forget.
+            </p>
+          </MaskReveal>
+
+          <MaskReveal delay={460}>
+            <Button variant="editorial" size="lg" asChild className="mt-9 h-14 px-7 font-mono text-[11px] uppercase">
+              <a href="#your-taste">Follow your taste <ArrowUpRight /></a>
+            </Button>
+          </MaskReveal>
+        </MaskGroup>
+      </section>
 
       <FilmCinematicWord />
     </main>
