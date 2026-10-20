@@ -1,23 +1,21 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Bookmark, Clock, Heart, History, Play, Search, SlidersHorizontal, Star, ThumbsDown, ThumbsUp, TrendingUp, User, X } from "lucide-react";
 import Aurora from "@/components/Aurora";
 import { Button } from "@/components/ui/button";
 import trailer from "@/assets/goodbye_web.webm";
-import { useMovieDemo } from "./demo-context";
+import { useMovieDemo, type Library as Lib, type Reaction } from "./demo-context";
 import { genres, languages, movies, ratingSteps, years, type Movie } from "./discover-data";
 
-type Reaction = "like" | "dislike";
-type Lib = { reactions: Record<string, Reaction>; ratings: Record<string, number>; favorites: string[]; watchlist: string[]; history: string[] };
 const toggleIn = (list: string[], id: string) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
 const byId = (id: string) => movies.find((m) => m.id === id)!;
 
 export function DiscoverPage() {
-  const { name, email } = useMovieDemo();
-  const [lib, setLib] = useState<Lib>({ reactions: { "where-we-go": "like" }, ratings: { "where-we-go": 5 }, favorites: ["elsewhere"], watchlist: ["night-signal", "blue-hour"], history: ["where-we-go", "the-green"] });
+  const { name, email, library: lib, setLibrary: setLib } = useMovieDemo();
+  const navigate = useNavigate();
   const [query, setQuery] = useState(""); const [focused, setFocused] = useState(false); const [recent, setRecent] = useState(["Hana Lindqvist", "Night Signal", "Idris Vance"]);
   const [genre, setGenre] = useState("All"); const [language, setLanguage] = useState("All"); const [year, setYear] = useState("All"); const [minRating, setMinRating] = useState(0);
-  const [open, setOpen] = useState<Movie | null>(null); const [panel, setPanel] = useState(false); const [tab, setTab] = useState<"history" | "watchlist" | "favorites">("history");
+  const [panel, setPanel] = useState(false); const [tab, setTab] = useState<"history" | "watchlist" | "favorites">("history");
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { const close = (e: MouseEvent) => { if (!searchRef.current?.contains(e.target as Node)) setFocused(false); }; document.addEventListener("mousedown", close); return () => document.removeEventListener("mousedown", close); }, []);
@@ -42,7 +40,7 @@ export function DiscoverPage() {
     rate: (id: string, n: number) => setLib((l) => ({ ...l, ratings: { ...l.ratings, [id]: n } })),
     fav: (id: string) => setLib((l) => ({ ...l, favorites: toggleIn(l.favorites, id) })),
     watch: (id: string) => setLib((l) => ({ ...l, watchlist: toggleIn(l.watchlist, id) })),
-    open: (m: Movie) => { setOpen(m); setLib((l) => ({ ...l, history: [m.id, ...l.history.filter((x) => x !== m.id)] })); },
+    open: (m: Movie) => { navigate({ to: "/movie/$movieId", params: { movieId: m.id } }); setLib((l) => ({ ...l, history: [m.id, ...l.history.filter((x) => x !== m.id)] })); },
   };
   const submitSearch = () => { if (q) setRecent((r) => [query.trim(), ...r.filter((x) => x !== query.trim())].slice(0, 5)); setFocused(false); document.getElementById("explore")?.scrollIntoView({ behavior: "smooth" }); };
   const resetFilters = () => { setGenre("All"); setLanguage("All"); setYear("All"); setMinRating(0); };
@@ -121,7 +119,6 @@ export function DiscoverPage() {
       </section>
     </main>
 
-    {open && <MovieModal movie={open} lib={lib} actions={actions} onClose={() => setOpen(null)} />}
     {panel && <ProfilePanel name={name} email={email} lib={lib} tab={tab} setTab={setTab} onClose={() => setPanel(false)} onOpen={(m) => { setPanel(false); actions.open(m); }} />}
   </div>;
 }
@@ -164,7 +161,7 @@ function IconAction({ label, on, onClick, children }: { label: string; on: boole
   return <button onClick={onClick} aria-label={label} aria-pressed={on} title={label} className={`grid h-10 w-10 place-items-center rounded-lg transition-colors [&_svg]:size-4 ${on ? "text-primary [&_svg]:fill-primary/30" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>{children}</button>;
 }
 
-function MovieModal({ movie: m, lib, actions, onClose }: { movie: Movie; lib: Lib; actions: Actions; onClose: () => void }) {
+export function MovieModal({ movie: m, lib, actions, onClose }: { movie: Movie; lib: Lib; actions: Actions; onClose: () => void }) {
   const [playing, setPlaying] = useState(false);
   useEffect(() => { const k = (e: KeyboardEvent) => e.key === "Escape" && onClose(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [onClose]);
   const myRating = lib.ratings[m.id] ?? 0;

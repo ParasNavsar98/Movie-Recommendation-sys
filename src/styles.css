@@ -142,3 +142,35 @@
 .search-glow { box-shadow: 0 0 0 1px color-mix(in oklch, var(--primary) 18%, transparent), 0 20px 60px -20px color-mix(in oklch, var(--primary) 35%, transparent); }
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Movie details page scope */
+.movie-detail {
+  --background: oklch(0.17 0.008 285);
+  --foreground: oklch(0.96 0.004 285);
+  --card: oklch(0.22 0.016 285);
+  --card-foreground: oklch(0.96 0.004 285);
+  --border: oklch(0.31 0.022 285);
+  --muted: oklch(0.25 0.016 285);
+  --muted-foreground: oklch(0.72 0.012 285);
+  --primary: oklch(0.56 0.2 283);
+  --primary-foreground: oklch(0.98 0 0);
+  --primary-glow: oklch(0.74 0.13 288);
+  --ring: oklch(0.56 0.2 283);
+  --signal: oklch(0.7 0.19 45);
+  background: var(--background);
+  color: var(--foreground);
+}
+:root {
+  --rate-skip: oklch(0.72 0.15 22);
+  --rate-timepass: oklch(0.86 0.13 85);
+  --rate-goforit: oklch(0.69 0.14 172);
+  --rate-perfection: oklch(0.74 0.13 288);
+}
+@theme inline {
+  --color-rate-skip: var(--rate-skip);
+  --color-rate-timepass: var(--rate-timepass);
+  --color-rate-goforit: var(--rate-goforit);
+  --color-rate-perfection: var(--rate-perfection);
+  --color-primary-glow: var(--primary-glow);
+}
+.detail-shade { background: linear-gradient(180deg, color-mix(in oklch, var(--background) 30%, transparent) 0%, color-mix(in oklch, var(--background) 70%, transparent) 55%, var(--background) 100%); }
