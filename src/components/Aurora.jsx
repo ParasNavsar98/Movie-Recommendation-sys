@@ -122,7 +122,20 @@ void main() {
 `;
 
 export default function Aurora(props) {
-  const { colorStops = ['#5227FF', '#7cff67', '#5227FF'], amplitude = 1.0, blend = 0.5, lightMode = false } = props;
+  const {
+    colorStops = ['#00FF9C', '#00C9B7', '#071014'],
+    amplitude = 1.0,
+    blend = 0.5,
+    lightMode = false,
+    speed = 1.5,
+    width = '100%',
+    height = '100%',
+    opacity = 1,
+    className = '',
+    children,
+    style = {},
+  } = props;
+
   const propsRef = useRef(props);
   propsRef.current = props;
 
@@ -147,11 +160,11 @@ export default function Aurora(props) {
 
     function resize() {
       if (!ctn) return;
-      const width = ctn.offsetWidth;
-      const height = ctn.offsetHeight;
-      renderer.setSize(width, height);
+      const w = ctn.offsetWidth || window.innerWidth;
+      const h = ctn.offsetHeight || window.innerHeight;
+      renderer.setSize(w, h);
       if (program) {
-        program.uniforms.uResolution.value = [width, height];
+        program.uniforms.uResolution.value = [w, h];
       }
     }
     window.addEventListener('resize', resize);
@@ -161,7 +174,8 @@ export default function Aurora(props) {
       delete geometry.attributes.uv;
     }
 
-    const colorStopsArray = colorStops.map(hex => {
+    const stops = propsRef.current.colorStops ?? colorStops;
+    const colorStopsArray = (stops.length >= 3 ? stops.slice(0, 3) : [...stops, '#000000', '#000000'].slice(0, 3)).map(hex => {
       const c = new Color(hex);
       return [c.r, c.g, c.b];
     });
@@ -173,7 +187,7 @@ export default function Aurora(props) {
         uTime: { value: 0 },
         uAmplitude: { value: amplitude },
         uColorStops: { value: colorStopsArray },
-        uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
+        uResolution: { value: [ctn.offsetWidth || window.innerWidth, ctn.offsetHeight || window.innerHeight] },
         uBlend: { value: blend },
         uLightMode: { value: lightMode ? 1 : 0 }
       }
@@ -185,16 +199,23 @@ export default function Aurora(props) {
     let animateId = 0;
     const update = t => {
       animateId = requestAnimationFrame(update);
-      const { time = t * 0.01, speed = 1.0 } = propsRef.current;
-      program.uniforms.uTime.value = time * speed * 0.1;
-      program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
+
+      const prefersReduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const currentSpeed = prefersReduced ? 0.05 : (propsRef.current.speed ?? speed ?? 1.5);
+      const { time = t * 0.01 } = propsRef.current;
+
+      program.uniforms.uTime.value = time * currentSpeed * 0.1;
+      program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? amplitude;
       program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
       program.uniforms.uLightMode.value = (propsRef.current.lightMode ?? lightMode) ? 1 : 0;
-      const stops = propsRef.current.colorStops ?? colorStops;
-      program.uniforms.uColorStops.value = stops.map(hex => {
+
+      const currentStops = propsRef.current.colorStops ?? colorStops;
+      const formattedStops = (currentStops.length >= 3 ? currentStops.slice(0, 3) : [...currentStops, '#000000', '#000000'].slice(0, 3)).map(hex => {
         const c = new Color(hex);
         return [c.r, c.g, c.b];
       });
+      program.uniforms.uColorStops.value = formattedStops;
+
       renderer.render({ scene: mesh });
     };
     animateId = requestAnimationFrame(update);
@@ -209,8 +230,22 @@ export default function Aurora(props) {
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amplitude, blend, lightMode]);
 
-  return <div ref={ctnDom} className="aurora-container" />;
+  return (
+    <div
+      ref={ctnDom}
+      className={`aurora-container ${className}`.trim()}
+      style={{
+        width: typeof width === 'number' ? `${width}px` : width,
+        height: typeof height === 'number' ? `${height}px` : height,
+        opacity,
+        ...style
+      }}
+    >
+      {children}
+    </div>
+  );
 }
+
+export const AuroraBlur = Aurora;

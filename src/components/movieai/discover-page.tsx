@@ -146,7 +146,7 @@ function MovieCard({ movie: m, lib, actions }: { movie: Movie; lib: Lib; actions
   const r = lib.reactions[m.id];
   return <article className="group transition-transform duration-300 hover:-translate-y-1.5">
     <div className="notch-card relative aspect-[3/4] overflow-hidden bg-muted">
-      <button onClick={() => actions.open(m)} className="absolute inset-0" aria-label={`Open ${m.title}`}><img src={m.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" /></button>
+      <Link to="/movie/$movieId" params={{ movieId: m.id }} className="absolute inset-0" aria-label={`Open ${m.title}`}><img src={m.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" /></Link>
       <span className="technical pointer-events-none absolute left-3 top-3 rounded-full bg-background/80 px-2.5 py-1 backdrop-blur"><Star size={10} className="mr-1 inline fill-signal text-signal" />{m.rating}</span>
       <div className="absolute inset-x-2 bottom-2 flex justify-between rounded-xl bg-background/80 p-1 backdrop-blur md:opacity-0 md:transition-opacity md:group-hover:opacity-100 md:group-focus-within:opacity-100">
         <IconAction label="Like" on={r === "like"} onClick={() => actions.react(m.id, "like")}><ThumbsUp /></IconAction>
@@ -155,7 +155,7 @@ function MovieCard({ movie: m, lib, actions }: { movie: Movie; lib: Lib; actions
         <IconAction label="Watchlist" on={lib.watchlist.includes(m.id)} onClick={() => actions.watch(m.id)}><Bookmark /></IconAction>
       </div>
     </div>
-    <h3 className="mt-3 truncate font-semibold">{m.title}</h3>
+    <Link to="/movie/$movieId" params={{ movieId: m.id }} className="hover:underline"><h3 className="mt-3 truncate font-semibold">{m.title}</h3></Link>
     <p className="technical text-muted-foreground">{m.year} / {m.genre}</p>
   </article>;
 }
