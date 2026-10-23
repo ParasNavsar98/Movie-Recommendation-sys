@@ -174,3 +174,36 @@
   --color-primary-glow: var(--primary-glow);
 }
 .detail-shade { background: linear-gradient(180deg, color-mix(in oklch, var(--background) 30%, transparent) 0%, color-mix(in oklch, var(--background) 70%, transparent) 55%, var(--background) 100%); }
+
+/* Explore page dark cinematic scope */
+.explore-cinema {
+  --background: #0B0B0B;
+  --foreground: #FFFFFF;
+  --card: #181818;
+  --card-foreground: #FFFFFF;
+  --popover: #181818;
+  --popover-foreground: #FFFFFF;
+  --muted: #121212;
+  --muted-foreground: #A1A1AA;
+  --primary: #FF6B00;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FF4500;
+  --secondary-foreground: #FFFFFF;
+  --border: #292929;
+  --input: #292929;
+  --ring: #FF6B00;
+  --accent: #FF6B00;
+  --accent-foreground: #FFFFFF;
+  background-color: #0B0B0B;
+  color: #FFFFFF;
+}
+
+.explore-cinema ::selection {
+  background: #FF6B00;
+  color: #FFFFFF;
+}
+
+.explore-cinema .explore-glow:focus-within {
+  box-shadow: 0 0 0 1px #FF6B00, 0 8px 30px -10px rgba(255, 107, 0, 0.35);
+}
+

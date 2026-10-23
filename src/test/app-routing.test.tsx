@@ -12,7 +12,7 @@ function renderAt(path: string) {
     context: { queryClient },
     history: createMemoryHistory({ initialEntries: [path] }),
   });
-  return render(<RouterProvider router={router} />);
+  return render(<RouterProvider router={router} />, { container: document.documentElement });
 }
 
 afterEach(() => {
@@ -25,6 +25,18 @@ afterEach(() => {
 describe("App routing", () => {
   it("renders the index route", async () => {
     const { container } = renderAt("/");
+
+    await waitFor(() => expect(container.firstChild).not.toBeNull());
+  });
+
+  it("renders the explore route", async () => {
+    const { container } = renderAt("/explore");
+
+    await waitFor(() => expect(container.firstChild).not.toBeNull());
+  });
+
+  it("renders the discover route", async () => {
+    const { container } = renderAt("/discover");
 
     await waitFor(() => expect(container.firstChild).not.toBeNull());
   });

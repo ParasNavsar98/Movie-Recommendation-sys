@@ -49,7 +49,11 @@ export function DiscoverPage() {
     <header className="glass sticky top-0 z-40 border-b border-border">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:px-10">
         <Link to="/" className="flex items-center gap-2 text-xl font-bold"><span className="h-3 w-3 bg-primary" /> MOVIEAI<span className="text-signal">.</span></Link>
-        <nav className="hidden gap-8 md:flex">{[["For you", "for-you"], ["Explore", "explore"], ["Genres", "genres"]].map(([l, id]) => <a key={id} href={`#${id}`} className="technical text-muted-foreground transition-colors hover:text-foreground">{l}</a>)}</nav>
+        <nav className="hidden gap-8 md:flex">
+          <a href="#for-you" className="technical text-muted-foreground transition-colors hover:text-foreground">For you</a>
+          <Link to="/explore" className="technical text-muted-foreground transition-colors hover:text-foreground">Explore</Link>
+          <a href="#genres" className="technical text-muted-foreground transition-colors hover:text-foreground">Genres</a>
+        </nav>
         <div className="flex items-center gap-2">
           {!name && <Link to="/login" className="technical hidden px-3 hover:text-primary sm:block">Log in</Link>}
           {!name && <Button asChild size="sm" className="hidden rounded-full font-mono text-[10px] uppercase sm:inline-flex"><Link to="/signup">Register</Link></Button>}

@@ -79,6 +79,7 @@ function Index() {
           </a>
           <nav aria-label="Main navigation" className="hidden items-center gap-10 md:flex">
             <Link className="technical transition-colors hover:text-signal" to="/discover">Discover</Link>
+            <Link className="technical transition-colors hover:text-signal" to="/explore">Explore</Link>
             <a className="technical transition-colors hover:text-signal" href="#how-it-works">How it works</a>
             <a className="technical transition-colors hover:text-signal" href="#your-taste">Your taste</a>
           </nav>
@@ -93,7 +94,10 @@ function Index() {
           </Button>
         </div>
         {menuOpen && <nav aria-label="Mobile navigation" className="flex flex-col gap-0 border-t border-border bg-background px-5 pb-5 md:hidden">
-          {[["Discover", "#discover"], ["How it works", "#how-it-works"], ["Your taste", "#your-taste"]].map(([label, href]) => <a key={href} href={href} onClick={closeMenu} className="border-b border-border py-5 text-2xl font-semibold uppercase">{label}</a>)}
+          <Link to="/discover" onClick={closeMenu} className="border-b border-border py-5 text-2xl font-semibold uppercase">Discover</Link>
+          <Link to="/explore" onClick={closeMenu} className="border-b border-border py-5 text-2xl font-semibold uppercase">Explore</Link>
+          <a href="#how-it-works" onClick={closeMenu} className="border-b border-border py-5 text-2xl font-semibold uppercase">How it works</a>
+          <a href="#your-taste" onClick={closeMenu} className="border-b border-border py-5 text-2xl font-semibold uppercase">Your taste</a>
         </nav>}
       </header>
 
