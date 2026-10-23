@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -48,6 +48,7 @@ const toggleIn = (list: string[], id: string) =>
 
 export function ExplorePage() {
   const { name, email, library: lib, setLibrary: setLib } = useMovieDemo();
+  const navigate = useNavigate();
 
   // Search & Filter state
   const [query, setQuery] = useState("");
@@ -190,11 +191,11 @@ export function ExplorePage() {
       setLib((l) => ({ ...l, ratings: { ...l.ratings, [id]: stars } }));
     },
     openDetails: (m: CatalogueMovie) => {
-      setSelectedMovie(m);
       setLib((l) => ({
         ...l,
         history: [m.id, ...l.history.filter((x) => x !== m.id)],
       }));
+      navigate({ to: "/movie/$movieId", params: { movieId: m.id } });
     },
   };
 

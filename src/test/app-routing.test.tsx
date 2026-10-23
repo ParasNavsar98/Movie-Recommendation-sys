@@ -48,4 +48,22 @@ describe("App routing", () => {
 
     await waitFor(() => expect(container.firstChild).not.toBeNull());
   });
+
+  it("renders the movie detail route for a catalogue movie", async () => {
+    const { container } = renderAt("/movie/293660");
+
+    await waitFor(() => expect(container.firstChild).not.toBeNull());
+  });
+
+  it("renders the movie detail route for a discover movie", async () => {
+    const { container } = renderAt("/movie/where-we-go");
+
+    await waitFor(() => expect(container.firstChild).not.toBeNull());
+  });
+
+  it("renders the movie detail route with invalid id", async () => {
+    const { container } = renderAt("/movie/non-existent-movie-id-99999");
+
+    await waitFor(() => expect(container.firstChild).not.toBeNull());
+  });
 });

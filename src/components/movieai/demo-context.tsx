@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from "react";
 
 export type Reaction = "like" | "dislike";
 export type Library = { reactions: Record<string, Reaction>; ratings: Record<string, number>; favorites: string[]; watchlist: string[]; history: string[]; watched: string[]; collections: string[] };
@@ -26,9 +26,37 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   const [selected, setSelected] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
   const [library, setLib] = useState<Library>(initialLibrary);
-  const setLibrary = (fn: (l: Library) => Library) => setLib(fn);
-  const reset = () => { setName(""); setEmail(""); setSelected([]); setGenres([]); setLib(initialLibrary); };
-  return <DemoContext.Provider value={{ name, email, selected, genres, setName, setEmail, setSelected, setGenres, reset, library, setLibrary }}>{children}</DemoContext.Provider>;
+
+  const setLibrary = useCallback((fn: (l: Library) => Library) => {
+    setLib(fn);
+  }, []);
+
+  const reset = useCallback(() => {
+    setName("");
+    setEmail("");
+    setSelected([]);
+    setGenres([]);
+    setLib(initialLibrary);
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      name,
+      email,
+      selected,
+      genres,
+      setName,
+      setEmail,
+      setSelected,
+      setGenres,
+      reset,
+      library,
+      setLibrary,
+    }),
+    [name, email, selected, genres, library, reset, setLibrary]
+  );
+
+  return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;
 }
 
 const noop = () => {};
