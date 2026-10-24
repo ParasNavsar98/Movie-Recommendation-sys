@@ -1,5 +1,5 @@
 import { catalogueMovies, type CatalogueMovie } from "@/data/catalogue-data";
-import { movies as discoverMovies, type Movie as DiscoverMovie } from "../discover-data";
+import { mockMovies as discoverMovies, type Movie as DiscoverMovie } from "../discover-data";
 import trailerAsset from "@/assets/goodbye_web.webm";
 import type {
   CastMember,
