@@ -36,7 +36,18 @@ const toggleIn = (list: string[], id: string) =>
 const byId = (id: string): Movie | undefined => getMovieById(id);
 
 export function DiscoverPage() {
-  const { name, email, library: lib, setLibrary: setLib } = useMovieDemo();
+  const {
+    name,
+    email,
+    library: lib,
+    setLibrary: setLib,
+    toggleLike,
+    toggleDislike,
+    toggleFavorite,
+    toggleWatchlist,
+    rateMovie,
+    recordWatched,
+  } = useMovieDemo();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
@@ -172,25 +183,16 @@ export function DiscoverPage() {
   const filtersActive = genre !== "All" || language !== "All" || year !== "All" || minRating > 0;
 
   const actions = {
-    react: (id: string, r: Reaction) =>
-      setLib((l) => {
-        const next = { ...l.reactions };
-        if (next[id] === r) delete next[id];
-        else next[id] = r;
-        return { ...l, reactions: next };
-      }),
-    rate: (id: string, n: number) =>
-      setLib((l) => ({ ...l, ratings: { ...l.ratings, [id]: n } })),
-    fav: (id: string) =>
-      setLib((l) => ({ ...l, favorites: toggleIn(l.favorites, id) })),
-    watch: (id: string) =>
-      setLib((l) => ({ ...l, watchlist: toggleIn(l.watchlist, id) })),
+    react: (id: string, r: Reaction) => {
+      if (r === "like") toggleLike(id);
+      else toggleDislike(id);
+    },
+    rate: (id: string, n: number) => rateMovie(id, n),
+    fav: (id: string) => toggleFavorite(id),
+    watch: (id: string) => toggleWatchlist(id),
     open: (m: Movie) => {
+      recordWatched(m.id);
       navigate({ to: "/movie/$movieId", params: { movieId: m.id } });
-      setLib((l) => ({
-        ...l,
-        history: [m.id, ...l.history.filter((x) => x !== m.id)],
-      }));
     },
   };
 

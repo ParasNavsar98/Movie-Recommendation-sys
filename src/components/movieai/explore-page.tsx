@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowUp,
@@ -17,13 +17,17 @@ import {
   History,
   Menu,
   Play,
+  RefreshCw,
   RotateCcw,
   Search,
   SlidersHorizontal,
+  Sparkles,
   Star,
   ThumbsDown,
   ThumbsUp,
   User,
+  Wifi,
+  WifiOff,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,11 +47,23 @@ import {
 const PAGE_SIZE = 36;
 const FALLBACK_POSTER = "/poster-fallback.svg";
 
-const toggleIn = (list: string[], id: string) =>
-  list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
-
 export function ExplorePage() {
-  const { name, email, library: lib, setLibrary: setLib } = useMovieDemo();
+  const {
+    name,
+    email,
+    library: lib,
+    setLibrary: setLib,
+    backendStatus,
+    syncCounter,
+    toggleLike,
+    toggleDislike,
+    toggleFavorite,
+    toggleWatchlist,
+    rateMovie,
+    recordWatched,
+    reset,
+    refreshBackendState,
+  } = useMovieDemo();
   const navigate = useNavigate();
 
   // Search & Filter state
@@ -134,7 +150,6 @@ export function ExplorePage() {
 
       case "rating_desc":
         return list.sort((a, b) => {
-          // Handle missing ratings without placing them at the top
           if (a.rating === null && b.rating === null) return 0;
           if (a.rating === null) return 1;
           if (b.rating === null) return -1;
@@ -179,22 +194,25 @@ export function ExplorePage() {
     return sortedMovies.slice(0, visibleCount);
   }, [sortedMovies, visibleCount]);
 
-  // Actions connecting to existing demo context
+  // Actions connecting to persistent demo context & backend API
   const actions = {
     toggleWatchlist: (id: string) => {
-      setLib((l) => ({ ...l, watchlist: toggleIn(l.watchlist, id) }));
+      toggleWatchlist(id);
     },
     toggleFavorite: (id: string) => {
-      setLib((l) => ({ ...l, favorites: toggleIn(l.favorites, id) }));
+      toggleFavorite(id);
+    },
+    toggleLike: (id: string) => {
+      toggleLike(id);
+    },
+    toggleDislike: (id: string) => {
+      toggleDislike(id);
     },
     rate: (id: string, stars: number) => {
-      setLib((l) => ({ ...l, ratings: { ...l.ratings, [id]: stars } }));
+      rateMovie(id, stars);
     },
-    openDetails: (m: CatalogueMovie) => {
-      setLib((l) => ({
-        ...l,
-        history: [m.id, ...l.history.filter((x) => x !== m.id)],
-      }));
+    openDetails: (m: CatalogueMovie | { id: string }) => {
+      recordWatched(m.id);
       navigate({ to: "/movie/$movieId", params: { movieId: m.id } });
     },
   };
@@ -221,6 +239,12 @@ export function ExplorePage() {
   const scrollToGridTop = () => {
     gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  const likedCount = Object.values(lib.reactions).filter((r) => r === "like").length;
+  const dislikedCount = Object.values(lib.reactions).filter((r) => r === "dislike").length;
+  const ratingCount = Object.keys(lib.ratings).length;
+  const favoriteCount = lib.favorites.length;
+  const totalSignals = likedCount + dislikedCount + ratingCount + favoriteCount;
 
   return (
     <div className="explore-cinema min-h-screen bg-[#0B0B0B] text-[#FFFFFF] selection:bg-[#FF6B00] selection:text-white">
@@ -263,6 +287,28 @@ export function ExplorePage() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Backend status indicator */}
+            <div
+              className={`hidden sm:inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-mono ${
+                backendStatus === "online"
+                  ? "border-emerald-500/30 bg-emerald-950/30 text-emerald-300"
+                  : backendStatus === "checking"
+                  ? "border-amber-500/30 bg-amber-950/30 text-amber-300"
+                  : "border-zinc-800 bg-zinc-900 text-zinc-400"
+              }`}
+            >
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  backendStatus === "online"
+                    ? "bg-emerald-400 animate-pulse"
+                    : backendStatus === "checking"
+                    ? "bg-amber-400 animate-ping"
+                    : "bg-zinc-500"
+                }`}
+              />
+              <span>{backendStatus === "online" ? "FastAPI Engine Active" : "Local Mode"}</span>
+            </div>
+
             {!name && (
               <Link
                 to="/login"
@@ -321,13 +367,6 @@ export function ExplorePage() {
             >
               Explore Catalogue
             </Link>
-            <a
-              href="#genres"
-              onClick={() => setMenuOpen(false)}
-              className="border-b border-[#292929] py-3 text-lg font-medium text-[#A1A1AA] hover:text-white"
-            >
-              Genres
-            </a>
             <div className="mt-4 flex gap-3 pb-2">
               <Button
                 asChild
@@ -366,7 +405,7 @@ export function ExplorePage() {
                 Explore Movies
               </h1>
               <p className="mt-2 text-sm text-[#A1A1AA] sm:text-base">
-                Discover your next favorite film from our verified archive.
+                Discover films shaped by your live interactions and the content-based recommendation engine.
               </p>
             </div>
 
@@ -383,7 +422,7 @@ export function ExplorePage() {
                   className="technical inline-flex items-center gap-1 rounded-full border border-[#FF6B00]/40 bg-[#FF6B00]/10 px-3 py-1.5 text-xs text-[#FF6B00] transition-colors hover:bg-[#FF6B00]/20"
                 >
                   <RotateCcw size={12} />
-                  Reset
+                  Reset filters
                 </button>
               )}
             </div>
@@ -448,6 +487,43 @@ export function ExplorePage() {
               })}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* 1. TASTE PROFILE / DEDICATED FOR YOU BANNER */}
+      <section className="border-b border-[#292929] bg-gradient-to-r from-purple-950/25 via-[#121214] to-[#0B0B0B] py-5">
+        <div className="mx-auto flex max-w-[1500px] flex-col sm:flex-row sm:items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center gap-3.5">
+            <div className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30">
+              <Sparkles size={20} className="animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="technical text-xs font-semibold uppercase tracking-wider text-purple-400">
+                  Personalized Recommendation Feed
+                </span>
+                {totalSignals > 0 && (
+                  <span className="rounded-full bg-purple-900/50 px-2 py-0.5 text-[10px] font-mono text-purple-300 border border-purple-700/50">
+                    {totalSignals} {totalSignals === 1 ? "signal" : "signals"} active
+                  </span>
+                )}
+              </div>
+              <p className="mt-0.5 text-xs sm:text-sm text-zinc-300">
+                Browse below to like, rate, and favorite films. Your signals shape your dedicated genre-grouped recommendations.
+              </p>
+            </div>
+          </div>
+
+          <Button
+            asChild
+            size="sm"
+            className="rounded-full bg-purple-600 px-5 text-xs font-semibold text-white hover:bg-purple-500 shadow-lg shadow-purple-950/50 flex-none self-start sm:self-auto"
+          >
+            <Link to="/discover">
+              <span>View For You Feed</span>
+              <span className="ml-1.5 font-bold">→</span>
+            </Link>
+          </Button>
         </div>
       </section>
 
@@ -622,6 +698,8 @@ export function ExplorePage() {
           name={name}
           email={email}
           lib={lib}
+          backendStatus={backendStatus}
+          onReset={reset}
           onClose={() => setPanelOpen(false)}
           onOpenMovie={(id) => {
             const m = catalogueMovies.find((x) => x.id === id);
@@ -636,8 +714,9 @@ export function ExplorePage() {
   );
 }
 
+
 // ---------------------------------------------------------
-// MOVIE CARD COMPONENT
+// MOVIE CARD COMPONENT (CATALOGUE GRID)
 // ---------------------------------------------------------
 function CatalogueMovieCard({
   movie,
@@ -649,6 +728,8 @@ function CatalogueMovieCard({
   actions: {
     toggleWatchlist: (id: string) => void;
     toggleFavorite: (id: string) => void;
+    toggleLike: (id: string) => void;
+    toggleDislike: (id: string) => void;
     rate: (id: string, stars: number) => void;
     openDetails: (m: CatalogueMovie) => void;
   };
@@ -656,6 +737,8 @@ function CatalogueMovieCard({
   const [imgError, setImgError] = useState(false);
   const inWatchlist = lib.watchlist.includes(movie.id);
   const inFavorites = lib.favorites.includes(movie.id);
+  const isLiked = lib.reactions[movie.id] === "like";
+  const isDisliked = lib.reactions[movie.id] === "dislike";
 
   const posterSrc = !imgError && movie.posterUrl ? movie.posterUrl : FALLBACK_POSTER;
 
@@ -688,6 +771,36 @@ function CatalogueMovieCard({
 
         {/* Quick Action Overlay (Desktop Hover) */}
         <div className="absolute inset-x-2 bottom-2 flex items-center justify-between rounded-lg bg-[#0B0B0B]/90 p-1 backdrop-blur-md border border-[#292929] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100">
+          <button
+            type="button"
+            title={isLiked ? "Unlike" : "Like"}
+            aria-label={isLiked ? "Liked" : "Like movie"}
+            onClick={(e) => {
+              e.stopPropagation();
+              actions.toggleLike(movie.id);
+            }}
+            className={`grid h-8 w-8 place-items-center rounded-md transition-colors ${
+              isLiked ? "bg-emerald-600 text-white" : "text-[#A1A1AA] hover:bg-[#292929] hover:text-white"
+            }`}
+          >
+            <ThumbsUp size={14} className={isLiked ? "fill-white" : ""} />
+          </button>
+
+          <button
+            type="button"
+            title={isDisliked ? "Undislike" : "Dislike"}
+            aria-label={isDisliked ? "Disliked" : "Dislike movie"}
+            onClick={(e) => {
+              e.stopPropagation();
+              actions.toggleDislike(movie.id);
+            }}
+            className={`grid h-8 w-8 place-items-center rounded-md transition-colors ${
+              isDisliked ? "bg-rose-600 text-white" : "text-[#A1A1AA] hover:bg-[#292929] hover:text-white"
+            }`}
+          >
+            <ThumbsDown size={14} className={isDisliked ? "fill-white" : ""} />
+          </button>
+
           <button
             type="button"
             title={inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
@@ -776,6 +889,8 @@ function CatalogueMovieModal({
   actions: {
     toggleWatchlist: (id: string) => void;
     toggleFavorite: (id: string) => void;
+    toggleLike: (id: string) => void;
+    toggleDislike: (id: string) => void;
     rate: (id: string, stars: number) => void;
   };
   onClose: () => void;
@@ -785,6 +900,8 @@ function CatalogueMovieModal({
 
   const inWatchlist = lib.watchlist.includes(movie.id);
   const inFavorites = lib.favorites.includes(movie.id);
+  const isLiked = lib.reactions[movie.id] === "like";
+  const isDisliked = lib.reactions[movie.id] === "dislike";
   const userRating = lib.ratings[movie.id] ?? 0;
 
   useEffect(() => {
@@ -976,6 +1093,32 @@ function CatalogueMovieModal({
 
               <Button
                 variant="outline"
+                onClick={() => actions.toggleLike(movie.id)}
+                className={`rounded-full border-[#292929] ${
+                  isLiked
+                    ? "bg-emerald-600/20 text-emerald-300 border-emerald-500/40"
+                    : "bg-transparent text-white hover:bg-[#181818]"
+                }`}
+              >
+                <ThumbsUp size={15} className={`mr-1.5 ${isLiked ? "fill-emerald-400" : ""}`} />
+                {isLiked ? "Liked" : "Like"}
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => actions.toggleDislike(movie.id)}
+                className={`rounded-full border-[#292929] ${
+                  isDisliked
+                    ? "bg-rose-600/20 text-rose-300 border-rose-500/40"
+                    : "bg-transparent text-white hover:bg-[#181818]"
+                }`}
+              >
+                <ThumbsDown size={15} className={`mr-1.5 ${isDisliked ? "fill-rose-400" : ""}`} />
+                {isDisliked ? "Disliked" : "Dislike"}
+              </Button>
+
+              <Button
+                variant="outline"
                 onClick={() => actions.toggleWatchlist(movie.id)}
                 className={`rounded-full border-[#292929] ${
                   inWatchlist
@@ -1017,12 +1160,16 @@ function ExploreProfilePanel({
   name,
   email,
   lib,
+  backendStatus,
+  onReset,
   onClose,
   onOpenMovie,
 }: {
   name: string;
   email: string;
   lib: Lib;
+  backendStatus: string;
+  onReset: () => void;
   onClose: () => void;
   onOpenMovie: (id: string) => void;
 }) {
@@ -1054,6 +1201,9 @@ function ExploreProfilePanel({
             <div>
               <p className="font-semibold text-white">{name || "Viewer"}</p>
               <p className="text-xs text-[#A1A1AA]">{email || "Local Demo Profile"}</p>
+              <span className="technical text-[10px] text-purple-400">
+                Engine: {backendStatus === "online" ? "Connected (SQLite Persistent)" : "Local Storage"}
+              </span>
             </div>
           </div>
           <button
@@ -1066,18 +1216,24 @@ function ExploreProfilePanel({
         </div>
 
         {/* Stats */}
-        <div className="mt-6 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-xl border border-[#292929] bg-[#181818] p-3">
-            <p className="text-xl font-bold text-white">{lib.watchlist.length}</p>
-            <p className="technical text-[10px] text-[#A1A1AA]">Watchlist</p>
+        <div className="mt-6 grid grid-cols-4 gap-2 text-center">
+          <div className="rounded-xl border border-[#292929] bg-[#181818] p-2.5">
+            <p className="text-lg font-bold text-emerald-400">
+              {Object.values(lib.reactions).filter((r) => r === "like").length}
+            </p>
+            <p className="technical text-[9px] text-[#A1A1AA]">Likes</p>
           </div>
-          <div className="rounded-xl border border-[#292929] bg-[#181818] p-3">
-            <p className="text-xl font-bold text-white">{lib.favorites.length}</p>
-            <p className="technical text-[10px] text-[#A1A1AA]">Favorites</p>
+          <div className="rounded-xl border border-[#292929] bg-[#181818] p-2.5">
+            <p className="text-lg font-bold text-white">{lib.watchlist.length}</p>
+            <p className="technical text-[9px] text-[#A1A1AA]">Watchlist</p>
           </div>
-          <div className="rounded-xl border border-[#292929] bg-[#181818] p-3">
-            <p className="text-xl font-bold text-white">{Object.keys(lib.ratings).length}</p>
-            <p className="technical text-[10px] text-[#A1A1AA]">Rated</p>
+          <div className="rounded-xl border border-[#292929] bg-[#181818] p-2.5">
+            <p className="text-lg font-bold text-white">{lib.favorites.length}</p>
+            <p className="technical text-[9px] text-[#A1A1AA]">Favorites</p>
+          </div>
+          <div className="rounded-xl border border-[#292929] bg-[#181818] p-2.5">
+            <p className="text-lg font-bold text-white">{Object.keys(lib.ratings).length}</p>
+            <p className="technical text-[9px] text-[#A1A1AA]">Rated</p>
           </div>
         </div>
 
@@ -1144,8 +1300,21 @@ function ExploreProfilePanel({
           )}
         </div>
 
+        {/* Reset Profile Action */}
+        <div className="mt-4 border-t border-[#292929] pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onReset}
+            className="w-full rounded-full border-zinc-800 bg-[#181818] text-xs text-rose-400 hover:bg-rose-950/20 hover:border-rose-500/40"
+          >
+            <RotateCcw size={12} className="mr-1.5" />
+            Reset Taste & Clear Interactions
+          </Button>
+        </div>
+
         {/* Auth footer */}
-        <div className="mt-6 border-t border-[#292929] pt-4">
+        <div className="mt-4 border-t border-[#292929] pt-4">
           <div className="flex gap-2">
             {!name ? (
               <>

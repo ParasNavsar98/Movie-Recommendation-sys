@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+artifacts/*.joblib
+artifacts/manifest.json
+recommendation_evaluation.csv
+*.db
+*.sqlite
+*.sqlite3

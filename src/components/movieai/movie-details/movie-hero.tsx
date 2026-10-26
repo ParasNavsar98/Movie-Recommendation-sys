@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bookmark, Check, FolderPlus, Play, ShieldAlert } from "lucide-react";
+import { Bookmark, Check, FolderPlus, Heart, Play, Star, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useMovieDemo } from "../demo-context";
 import { TrailerPlayer } from "./trailer-player";
 import type { MovieDetail } from "./types";
@@ -9,7 +9,16 @@ interface MovieHeroProps {
 }
 
 export function MovieHero({ movie }: MovieHeroProps) {
-  const { library, setLibrary } = useMovieDemo();
+  const {
+    library,
+    setLibrary,
+    toggleLike,
+    toggleDislike,
+    toggleFavorite,
+    toggleWatchlist,
+    recordWatched,
+    rateMovie,
+  } = useMovieDemo();
   const [isPlayingTrailer, setIsPlayingTrailer] = useState(false);
   const [posterError, setPosterError] = useState(false);
   const [collectionToast, setCollectionToast] = useState(false);
@@ -17,23 +26,34 @@ export function MovieHero({ movie }: MovieHeroProps) {
   const isWatched = library.watched.includes(movie.id);
   const isWatchLater = library.watchlist.includes(movie.id);
   const isInCollection = library.collections.includes(movie.id);
+  const isLiked = library.reactions[movie.id] === "like";
+  const isDisliked = library.reactions[movie.id] === "dislike";
+  const isFavorited = library.favorites.includes(movie.id);
+  const currentRating = library.ratings[movie.id] || 0;
 
-  const toggleWatched = () => {
-    setLibrary((prev) => ({
-      ...prev,
-      watched: prev.watched.includes(movie.id)
-        ? prev.watched.filter((id) => id !== movie.id)
-        : [...prev.watched, movie.id],
-    }));
+  const handleToggleWatched = () => {
+    recordWatched(movie.id);
   };
 
-  const toggleWatchlist = () => {
-    setLibrary((prev) => ({
-      ...prev,
-      watchlist: prev.watchlist.includes(movie.id)
-        ? prev.watchlist.filter((id) => id !== movie.id)
-        : [...prev.watchlist, movie.id],
-    }));
+  const handleToggleWatchlist = () => {
+    toggleWatchlist(movie.id);
+  };
+
+  const handleToggleLike = () => {
+    toggleLike(movie.id);
+  };
+
+  const handleToggleDislike = () => {
+    toggleDislike(movie.id);
+  };
+
+  const handleToggleFavorite = () => {
+    toggleFavorite(movie.id);
+  };
+
+  const handleRate = (stars: number) => {
+    const next = currentRating === stars ? 0 : stars;
+    rateMovie(movie.id, next);
   };
 
   const toggleCollection = () => {
@@ -189,9 +209,9 @@ export function MovieHero({ movie }: MovieHeroProps) {
               {/* Mark as Watched (Wide purple pill) */}
               <button
                 type="button"
-                onClick={toggleWatched}
+                onClick={handleToggleWatched}
                 aria-pressed={isWatched}
-                className={`inline-flex h-11 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all ${
+                className={`inline-flex h-11 items-center gap-2 rounded-full px-6 text-sm font-semibold transition-all ${
                   isWatched
                     ? "bg-purple-700 text-white shadow-lg shadow-purple-900/40"
                     : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white"
@@ -202,6 +222,54 @@ export function MovieHero({ movie }: MovieHeroProps) {
                   className={`transition-transform ${isWatched ? "scale-110" : ""}`}
                 />
                 <span>{isWatched ? "Watched" : "Mark as Watched"}</span>
+              </button>
+
+              {/* Like Button */}
+              <button
+                type="button"
+                onClick={handleToggleLike}
+                aria-label={isLiked ? "Unlike movie" : "Like movie"}
+                aria-pressed={isLiked}
+                className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+                  isLiked
+                    ? "border-emerald-500/60 bg-emerald-950/40 text-emerald-300"
+                    : "border-zinc-800 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200"
+                }`}
+              >
+                <ThumbsUp size={16} className={isLiked ? "fill-emerald-400 text-emerald-400" : ""} />
+                <span>{isLiked ? "Liked" : "Like"}</span>
+              </button>
+
+              {/* Dislike Button */}
+              <button
+                type="button"
+                onClick={handleToggleDislike}
+                aria-label={isDisliked ? "Undislike movie" : "Dislike movie"}
+                aria-pressed={isDisliked}
+                className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+                  isDisliked
+                    ? "border-rose-500/60 bg-rose-950/40 text-rose-300"
+                    : "border-zinc-800 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200"
+                }`}
+              >
+                <ThumbsDown size={16} className={isDisliked ? "fill-rose-400 text-rose-400" : ""} />
+                <span>{isDisliked ? "Disliked" : "Dislike"}</span>
+              </button>
+
+              {/* Favorite Button */}
+              <button
+                type="button"
+                onClick={handleToggleFavorite}
+                aria-label={isFavorited ? "Remove favorite" : "Favorite movie"}
+                aria-pressed={isFavorited}
+                className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+                  isFavorited
+                    ? "border-rose-500/60 bg-rose-950/40 text-rose-300"
+                    : "border-zinc-800 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200"
+                }`}
+              >
+                <Heart size={16} className={isFavorited ? "fill-rose-500 text-rose-500" : ""} />
+                <span>{isFavorited ? "Favorited" : "Favorite"}</span>
               </button>
 
               {/* Collections Button */}
@@ -222,7 +290,7 @@ export function MovieHero({ movie }: MovieHeroProps) {
               {/* Watch Later Button */}
               <button
                 type="button"
-                onClick={toggleWatchlist}
+                onClick={handleToggleWatchlist}
                 aria-pressed={isWatchLater}
                 className={`inline-flex h-11 items-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors ${
                   isWatchLater
@@ -236,6 +304,36 @@ export function MovieHero({ movie }: MovieHeroProps) {
                 />
                 <span>{isWatchLater ? "In Watchlist" : "Watch Later"}</span>
               </button>
+            </div>
+
+            {/* Quick Star Rating Bar */}
+            <div className="mt-4 flex items-center gap-3">
+              <span className="text-xs text-zinc-400">Your Rating:</span>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => handleRate(star)}
+                    aria-label={`Rate ${star} out of 5 stars`}
+                    className="p-1 text-zinc-400 hover:text-amber-400 transition-colors"
+                  >
+                    <Star
+                      size={18}
+                      className={
+                        star <= currentRating
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-zinc-600"
+                      }
+                    />
+                  </button>
+                ))}
+              </div>
+              {currentRating > 0 && (
+                <span className="text-xs font-mono text-amber-400">
+                  {currentRating} / 5 Stars
+                </span>
+              )}
             </div>
 
             {/* Temporary feedback notice */}

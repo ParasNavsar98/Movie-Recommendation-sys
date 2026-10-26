@@ -1,0 +1,101 @@
+Source_Movie_ID,Source_Movie,Rank,Recommended_Movie_ID,Recommended_Movie,Similarity_Score,Genres
+27205,Inception,1,10133,Cypher,0.325222,Thriller|Science Fiction|Mystery
+27205,Inception,2,5137,Sky Captain and the World of Tomorrow,0.3,Mystery|Action|Thriller|Science Fiction|Adventure
+27205,Inception,3,9620,Paycheck,0.3,Action|Adventure|Mystery|Science Fiction|Thriller
+27205,Inception,4,180,Minority Report,0.295896,Action|Thriller|Science Fiction|Mystery
+27205,Inception,5,10329,Congo,0.291756,Action|Adventure|Drama|Mystery|Science Fiction|Thriller
+27205,Inception,6,13811,Knowing,0.291756,Action|Adventure|Drama|Mystery|Science Fiction|Thriller
+27205,Inception,7,75612,Oblivion,0.284167,Action|Science Fiction|Adventure|Mystery
+27205,Inception,8,198663,The Maze Runner,0.276705,Action|Mystery|Science Fiction|Thriller
+27205,Inception,9,154,Star Trek II: The Wrath of Khan,0.272608,Action|Adventure|Science Fiction|Thriller
+27205,Inception,10,45612,Source Code,0.270813,Thriller|Science Fiction|Mystery
+293660,Deadpool,1,37931,MacGruber,0.32656,Action|Adventure|Comedy
+293660,Deadpool,2,9471,Charlie's Angels: Full Throttle,0.314395,Action|Adventure|Comedy
+293660,Deadpool,3,10136,The Golden Child,0.309382,Action|Adventure|Comedy
+293660,Deadpool,4,6519,The Dukes of Hazzard,0.308249,Action|Adventure|Comedy
+293660,Deadpool,5,9486,Johnny English,0.304198,Adventure|Action|Comedy
+293660,Deadpool,6,13938,The Last Dragon,0.303592,Action|Adventure|Comedy
+293660,Deadpool,7,11199,Wild Hogs,0.303008,Action|Adventure|Comedy
+293660,Deadpool,8,9292,Hudson Hawk,0.302344,Action|Adventure|Comedy
+293660,Deadpool,9,13064,Airborne,0.301504,Action|Adventure|Comedy
+293660,Deadpool,10,13950,All About the Benjamins,0.301276,Action|Adventure|Comedy
+11036,The Notebook,1,228205,The Longest Ride,0.387909,Drama|Romance
+11036,The Notebook,2,8055,The Reader,0.354533,Drama|Romance
+11036,The Notebook,3,6639,Love in the Time of Cholera,0.353531,Drama|Romance
+11036,The Notebook,4,11889,Iris,0.346683,Drama|Romance
+11036,The Notebook,5,10436,The Age of Innocence,0.340491,Drama|Romance
+11036,The Notebook,6,76,Before Sunrise,0.338308,Drama|Romance
+11036,The Notebook,7,41210,The Switch,0.337805,Comedy|Romance|Drama
+11036,The Notebook,8,51384,"Lovely, Still",0.335687,Drama|Romance
+11036,The Notebook,9,1391,Y Tu Mamá También,0.334486,Drama|Romance
+11036,The Notebook,10,33870,Mao's Last Dancer,0.334464,Drama|Romance
+24428,The Avengers,1,99861,Avengers: Age of Ultron,0.412744,Action|Adventure|Science Fiction
+24428,The Avengers,2,47933,Independence Day: Resurgence,0.345303,Action|Adventure|Science Fiction
+24428,The Avengers,3,49529,John Carter,0.339094,Action|Adventure|Science Fiction
+24428,The Avengers,4,262504,Allegiant,0.338636,Adventure|Science Fiction
+24428,The Avengers,5,11411,Superman IV: The Quest for Peace,0.337823,Action|Adventure|Science Fiction
+24428,The Avengers,6,16320,Serenity,0.328716,Science Fiction|Action|Adventure|Thriller
+24428,The Avengers,7,100402,Captain America: The Winter Soldier,0.327093,Action|Adventure|Science Fiction
+24428,The Avengers,8,21512,The Blood of Heroes,0.325899,Action|Adventure|Science Fiction
+24428,The Avengers,9,20526,TRON: Legacy,0.321753,Adventure|Action|Science Fiction
+24428,The Avengers,10,166424,Fantastic Four,0.320391,Action|Adventure|Science Fiction
+155,The Dark Knight,1,49026,The Dark Knight Rises,0.533672,Action|Crime|Drama|Thriller
+155,The Dark Knight,2,272,Batman Begins,0.378787,Action|Crime|Drama
+155,The Dark Knight,3,6071,Kiss of Death,0.330746,Action|Crime|Drama|Thriller
+155,The Dark Knight,4,1619,The Way of the Gun,0.328065,Action|Crime|Drama|Thriller
+155,The Dark Knight,5,7873,Harsh Times,0.326918,Crime|Drama|Thriller|Action
+155,The Dark Knight,6,22803,Law Abiding Citizen,0.326479,Drama|Crime|Thriller
+155,The Dark Knight,7,1620,Hitman,0.31684,Action|Crime|Drama|Thriller
+155,The Dark Knight,8,192102,3 Days to Kill,0.312209,Action|Drama|Thriller|Crime
+155,The Dark Knight,9,102362,Dead Man Down,0.31148,Thriller|Action|Crime|Drama
+155,The Dark Knight,10,144336,Sabotage,0.310489,Action|Drama|Thriller|Crime
+597,Titanic,1,9709,My Summer of Love,0.317837,Drama|Thriller|Romance
+597,Titanic,2,5852,Angel Eyes,0.309299,Drama|Romance|Thriller
+597,Titanic,3,905,Pandora's Box,0.308993,Drama|Thriller|Romance
+597,Titanic,4,11065,O,0.301693,Drama|Romance|Thriller
+597,Titanic,5,216015,Fifty Shades of Grey,0.301267,Drama|Romance|Thriller
+597,Titanic,6,10998,Fatal Attraction,0.3,Drama|Romance|Thriller
+597,Titanic,7,796,Cruel Intentions,0.3,Drama|Romance|Thriller
+597,Titanic,8,9833,The Phantom of the Opera,0.3,Thriller|Drama|Romance
+597,Titanic,9,71547,Fascination,0.277731,Romance|Thriller
+597,Titanic,10,121676,Inescapable,0.275661,Thriller|Romance
+157336,Interstellar,1,644,A.I. Artificial Intelligence,0.320873,Drama|Science Fiction|Adventure
+157336,Interstellar,2,811,Silent Running,0.309288,Adventure|Drama|Science Fiction
+157336,Interstellar,3,173,"20,000 Leagues Under the Sea",0.3,Adventure|Drama|Science Fiction
+157336,Interstellar,4,245703,Midnight Special,0.3,Adventure|Drama|Science Fiction
+157336,Interstellar,5,286217,The Martian,0.3,Drama|Adventure|Science Fiction
+157336,Interstellar,6,563,Starship Troopers,0.2957,Adventure|Action|Thriller|Science Fiction
+157336,Interstellar,7,5172,The Astronaut Farmer,0.29161,Adventure|Comedy|Drama|Science Fiction
+157336,Interstellar,8,18162,Land of the Lost,0.285233,Adventure|Comedy|Science Fiction
+157336,Interstellar,9,13001,Stargate: The Ark of Truth,0.285154,Adventure|Science Fiction
+157336,Interstellar,10,329,Jurassic Park,0.285154,Adventure|Science Fiction
+862,Toy Story,1,863,Toy Story 2,0.616891,Animation|Comedy|Family
+862,Toy Story,2,10193,Toy Story 3,0.562274,Animation|Family|Comedy
+862,Toy Story,3,175574,Free Birds,0.350343,Animation|Comedy|Family
+862,Toy Story,4,585,"Monsters, Inc.",0.331968,Animation|Comedy|Family
+862,Toy Story,5,49013,Cars 2,0.317685,Animation|Family|Adventure|Comedy
+862,Toy Story,6,920,Cars,0.317685,Animation|Adventure|Comedy|Family
+862,Toy Story,7,7518,Over the Hedge,0.30898,Comedy|Animation|Family
+862,Toy Story,8,9513,Garfield: A Tail of Two Kitties,0.308406,Animation|Comedy|Family
+862,Toy Story,9,8920,Garfield,0.30828,Animation|Comedy|Family
+862,Toy Story,10,65759,Happy Feet Two,0.307335,Animation|Comedy|Family
+603,The Matrix,1,604,The Matrix Reloaded,0.345303,Adventure|Action|Thriller|Science Fiction
+603,The Matrix,2,19995,Avatar,0.325819,Action|Adventure|Fantasy|Science Fiction
+603,The Matrix,3,16911,The Inhabited Island,0.324692,Action|Fantasy|Science Fiction|Thriller
+603,The Matrix,4,8202,Æon Flux,0.316238,Action|Science Fiction
+603,The Matrix,5,3604,Flash Gordon,0.313641,Science Fiction
+603,The Matrix,6,205126,Independence Daysaster,0.313535,Action|Science Fiction
+603,The Matrix,7,10350,Wing Commander,0.312895,Action|Science Fiction
+603,The Matrix,8,61984,Space Battleship Yamato,0.310295,Science Fiction
+603,The Matrix,9,44943,Battle: Los Angeles,0.310169,Action|Science Fiction
+603,The Matrix,10,218,The Terminator,0.307296,Action|Thriller|Science Fiction
+138843,The Conjuring,1,259693,The Conjuring 2,0.409322,Horror
+138843,The Conjuring,2,10065,The Amityville Horror,0.386136,Horror|Thriller|Drama
+138843,The Conjuring,3,49018,Insidious,0.379097,Horror|Thriller
+138843,The Conjuring,4,79694,The Apparition,0.370519,Horror|Thriller
+138843,The Conjuring,5,91586,Insidious: Chapter 2,0.35717,Horror|Thriller
+138843,The Conjuring,6,50698,Grave Encounters,0.351943,Thriller|Horror
+138843,The Conjuring,7,345911,Lights Out,0.335012,Horror|Thriller
+138843,The Conjuring,8,3021,1408,0.327906,Horror|Thriller
+138843,The Conjuring,9,10987,Halloween: The Curse of Michael Myers,0.323649,Horror|Thriller
+138843,The Conjuring,10,193603,Hayride,0.319819,Thriller|Horror
