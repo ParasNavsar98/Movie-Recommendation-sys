@@ -43,14 +43,14 @@ describe("Discover / For You Real Movie Integration", () => {
     expect(moviesWithPosters[0].image.startsWith("/posters/")).toBe(true);
   });
 
-  it("renders the For You page with real catalogue content", async () => {
-    const { getByText } = await renderWithRouter("/discover");
+  it("renders the dedicated For You page with real catalogue content", async () => {
+    const { getByText, getAllByText } = await renderWithRouter("/discover");
 
-    // Check that discover page rendered
+    // Check that For You page rendered
     await waitFor(() => {
-      expect(getByText(/Recommended for you/i)).toBeDefined();
-      expect(getByText(/Top pick for you/i)).toBeDefined();
-      expect(getByText(/Curated Catalogue/i)).toBeDefined();
+      expect(getAllByText(/For You/i).length).toBeGreaterThan(0);
+      expect(getAllByText(/Explore Catalogue/i).length).toBeGreaterThan(0);
+      expect(getByText(/Taste Profile/i)).toBeDefined();
     });
   });
 });

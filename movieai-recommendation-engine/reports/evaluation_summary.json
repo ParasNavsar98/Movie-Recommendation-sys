@@ -1,0 +1,307 @@
+{
+  "data_quality": {
+    "source_path": "E:\\Downloads\\movieai-recommendation-engine\\movieai-recommendation-engine\\data\\MOVIEAI_Movies_Enriched_For_Recommendation.csv",
+    "source_sha256": "1eb1746aef9fb614f5941cf34270f62c89a283afc29a69a402f1fff5987ef674",
+    "raw_rows": 4803,
+    "records": 4803,
+    "unique_movie_ids": 4803,
+    "duplicate_ids": 0,
+    "duplicate_id_details": [],
+    "invalid_id_rows_dropped": 0,
+    "missing_columns": [],
+    "missing_descriptions": 4,
+    "missing_genres": 28,
+    "genres_from_fallback": 0,
+    "missing_directors": 30,
+    "invalid_or_missing_years": 1,
+    "valid_poster_paths": 4526,
+    "non_english_descriptions": 2,
+    "duplicate_titles": 6
+  },
+  "settings": {
+    "weights": {
+      "plot": 0.7,
+      "genre": 0.25,
+      "director": 0.05
+    },
+    "tfidf": {
+      "ngram_range": [
+        1,
+        2
+      ],
+      "max_features": 50000,
+      "min_df": 2,
+      "sublinear_tf": true
+    },
+    "calibrate_plot": true,
+    "plot_reference": 0.3047981858253479,
+    "partial_evidence_gamma": 1.0
+  },
+  "sources": {
+    "Inception": 27205,
+    "Deadpool": 293660,
+    "The Notebook": 11036,
+    "The Avengers": 24428,
+    "The Dark Knight": 155,
+    "Titanic": 597,
+    "Interstellar": 157336,
+    "Toy Story": 862,
+    "The Matrix": 603,
+    "The Conjuring": 138843
+  },
+  "failed_queries": [],
+  "integrity_new": {
+    "self_recommendations": 0,
+    "duplicate_recommendations": 0,
+    "non_finite_scores": 0,
+    "rows": 100
+  },
+  "runtime": {
+    "build_seconds": 1.222,
+    "query_ms_mean": 4.59,
+    "query_ms_max": 5.83,
+    "legacy_build_seconds": 2.18
+  },
+  "score_distribution": {
+    "Similarity_Score": {
+      "count": 100,
+      "mean": 0.43360488,
+      "std": 0.13253297628041708,
+      "min": 0.291867,
+      "p25": 0.35031625,
+      "median": 0.391273,
+      "p75": 0.48863850000000003,
+      "max": 1.0
+    },
+    "Plot_Similarity": {
+      "count": 100,
+      "mean": 0.11328764999999999,
+      "std": 0.0623129453335942,
+      "min": 0.035055,
+      "p25": 0.06972,
+      "median": 0.102157,
+      "p75": 0.141196,
+      "max": 0.419166
+    },
+    "Genre_Similarity": {
+      "count": 100,
+      "mean": 0.69440648,
+      "std": 0.2603544532646784,
+      "min": 0.0,
+      "p25": 0.543469,
+      "median": 0.7378175,
+      "p75": 0.90617775,
+      "max": 1.0
+    },
+    "Director_Similarity": {
+      "count": 100,
+      "mean": 0.07,
+      "std": 0.25514701644346144,
+      "min": 0.0,
+      "p25": 0.0,
+      "median": 0.0,
+      "p75": 0.0,
+      "max": 1.0
+    }
+  },
+  "integrity_legacy": {
+    "self_recommendations": 0,
+    "duplicate_recommendations": 0,
+    "non_finite_scores": 0,
+    "rows": 100
+  },
+  "comparison": {
+    "per_source": {
+      "Inception": {
+        "overlap_jaccard": 0.17647058823529413,
+        "franchise_members_in_dataset": 0,
+        "franchise_found_new": 0,
+        "franchise_found_legacy": 0,
+        "mean_plot_raw_new": 0.09296752288937568,
+        "weak_plot_share_new": 0.1,
+        "genre_only_share_new": 0.1,
+        "mean_genre_new": 0.6487741589546203,
+        "intra_list_diversity_new": 0.8458716018585274,
+        "mean_plot_raw_legacy": 0.034156286343932155,
+        "weak_plot_share_legacy": 0.7,
+        "genre_only_share_legacy": 0.7,
+        "mean_genre_legacy": 0.9148587107658386,
+        "intra_list_diversity_legacy": 0.7617748357872014
+      },
+      "Deadpool": {
+        "overlap_jaccard": 0.05263157894736842,
+        "franchise_members_in_dataset": 0,
+        "franchise_found_new": 0,
+        "franchise_found_legacy": 0,
+        "mean_plot_raw_new": 0.09828527234494686,
+        "weak_plot_share_new": 0.0,
+        "genre_only_share_new": 0.0,
+        "mean_genre_new": 0.6319538116455078,
+        "intra_list_diversity_new": 0.7745602003339519,
+        "mean_plot_raw_legacy": 0.016642838018015027,
+        "weak_plot_share_legacy": 0.9,
+        "genre_only_share_legacy": 0.9,
+        "mean_genre_legacy": 1.0,
+        "intra_list_diversity_legacy": 0.7348559296767012
+      },
+      "The Notebook": {
+        "overlap_jaccard": 0.25,
+        "franchise_members_in_dataset": 0,
+        "franchise_found_new": 0,
+        "franchise_found_legacy": 0,
+        "mean_plot_raw_new": 0.14926505386829375,
+        "weak_plot_share_new": 0.0,
+        "genre_only_share_new": 0.0,
+        "mean_genre_new": 0.6451278388500213,
+        "intra_list_diversity_new": 0.7888430871828802,
+        "mean_plot_raw_legacy": 0.08556116409599782,
+        "weak_plot_share_legacy": 0.0,
+        "genre_only_share_legacy": 0.0,
+        "mean_genre_legacy": 0.9844620585441589,
+        "intra_list_diversity_legacy": 0.7013867990291831
+      },
+      "The Avengers": {
+        "overlap_jaccard": 0.6666666666666666,
+        "franchise_members_in_dataset": 1,
+        "franchise_found_new": 1,
+        "franchise_found_legacy": 1,
+        "mean_plot_raw_new": 0.0802434217184782,
+        "weak_plot_share_new": 0.3,
+        "genre_only_share_new": 0.3,
+        "mean_genre_new": 0.9219939112663269,
+        "intra_list_diversity_new": 0.7390874124264515,
+        "mean_plot_raw_legacy": 0.06862551467493176,
+        "weak_plot_share_legacy": 0.5,
+        "genre_only_share_legacy": 0.5,
+        "mean_genre_legacy": 0.9771779537200928,
+        "intra_list_diversity_legacy": 0.7117772492971075
+      },
+      "The Dark Knight": {
+        "overlap_jaccard": 0.25,
+        "franchise_members_in_dataset": 2,
+        "franchise_found_new": 2,
+        "franchise_found_legacy": 1,
+        "mean_plot_raw_new": 0.1585180029273033,
+        "weak_plot_share_new": 0.0,
+        "genre_only_share_new": 0.0,
+        "mean_genre_new": 0.6166681468486785,
+        "intra_list_diversity_new": 0.6792868173930988,
+        "mean_plot_raw_legacy": 0.07257894668728113,
+        "weak_plot_share_legacy": 0.6,
+        "genre_only_share_legacy": 0.6,
+        "mean_genre_legacy": 0.9735957264900208,
+        "intra_list_diversity_legacy": 0.7075644982490946
+      },
+      "Titanic": {
+        "overlap_jaccard": 0.05263157894736842,
+        "franchise_members_in_dataset": 2,
+        "franchise_found_new": 1,
+        "franchise_found_legacy": 0,
+        "mean_plot_raw_new": 0.07720216065645218,
+        "weak_plot_share_new": 0.1,
+        "genre_only_share_new": 0.1,
+        "mean_genre_new": 0.7700062692165375,
+        "intra_list_diversity_new": 0.7912702674020882,
+        "mean_plot_raw_legacy": 0.01179646598175168,
+        "weak_plot_share_legacy": 1.0,
+        "genre_only_share_legacy": 1.0,
+        "mean_genre_legacy": 0.9796684980392456,
+        "intra_list_diversity_legacy": 0.7375445358208748
+      },
+      "Interstellar": {
+        "overlap_jaccard": 0.1111111111111111,
+        "franchise_members_in_dataset": 0,
+        "franchise_found_new": 0,
+        "franchise_found_legacy": 0,
+        "mean_plot_raw_new": 0.08510110527276993,
+        "weak_plot_share_new": 0.2,
+        "genre_only_share_new": 0.2,
+        "mean_genre_new": 0.605872368067503,
+        "intra_list_diversity_new": 0.8179838587037744,
+        "mean_plot_raw_legacy": 0.021411191299557687,
+        "weak_plot_share_legacy": 0.9,
+        "genre_only_share_legacy": 0.9,
+        "mean_genre_legacy": 0.9328836083412171,
+        "intra_list_diversity_legacy": 0.7544462849231569
+      },
+      "Toy Story": {
+        "overlap_jaccard": 0.25,
+        "franchise_members_in_dataset": 2,
+        "franchise_found_new": 2,
+        "franchise_found_legacy": 2,
+        "mean_plot_raw_new": 0.15940172970294952,
+        "weak_plot_share_new": 0.0,
+        "genre_only_share_new": 0.0,
+        "mean_genre_new": 0.596832999587059,
+        "intra_list_diversity_new": 0.7677952769700024,
+        "mean_plot_raw_legacy": 0.10400712322443724,
+        "weak_plot_share_legacy": 0.6,
+        "genre_only_share_legacy": 0.6,
+        "mean_genre_legacy": 0.9784680843353272,
+        "intra_list_diversity_legacy": 0.6973892289840513
+      },
+      "The Matrix": {
+        "overlap_jaccard": 0.42857142857142855,
+        "franchise_members_in_dataset": 2,
+        "franchise_found_new": 1,
+        "franchise_found_legacy": 1,
+        "mean_plot_raw_new": 0.12182593159377575,
+        "weak_plot_share_new": 0.0,
+        "genre_only_share_new": 0.0,
+        "mean_genre_new": 0.5979667425155639,
+        "intra_list_diversity_new": 0.8308365356615713,
+        "mean_plot_raw_legacy": 0.0704997420310974,
+        "weak_plot_share_legacy": 0.4,
+        "genre_only_share_legacy": 0.4,
+        "mean_genre_legacy": 0.8565160810947419,
+        "intra_list_diversity_legacy": 0.7505321590554499
+      },
+      "The Conjuring": {
+        "overlap_jaccard": 0.5384615384615384,
+        "franchise_members_in_dataset": 1,
+        "franchise_found_new": 1,
+        "franchise_found_legacy": 1,
+        "mean_plot_raw_new": 0.11006618700921536,
+        "weak_plot_share_new": 0.0,
+        "genre_only_share_new": 0.0,
+        "mean_genre_new": 0.9088683605194092,
+        "intra_list_diversity_new": 0.723047123214414,
+        "mean_plot_raw_legacy": 0.08974959338083863,
+        "weak_plot_share_legacy": 0.3,
+        "genre_only_share_legacy": 0.3,
+        "mean_genre_legacy": 0.9727551877498627,
+        "intra_list_diversity_legacy": 0.6883942789901779
+      }
+    },
+    "mean": {
+      "mean_plot_raw_new": 0.11328763879835606,
+      "weak_plot_share_new": 0.07,
+      "genre_only_share_new": 0.07,
+      "mean_genre_new": 0.6944064607471228,
+      "intra_list_diversity_new": 0.775858218114676,
+      "mean_plot_raw_legacy": 0.05750288657378405,
+      "weak_plot_share_legacy": 0.5900000000000001,
+      "genre_only_share_legacy": 0.5900000000000001,
+      "mean_genre_legacy": 0.9570385909080507,
+      "intra_list_diversity_legacy": 0.7245665799812999,
+      "overlap_jaccard": 0.27765444909407755
+    }
+  },
+  "diversity_experiment": {
+    "1.0": {
+      "mean_content_score": 0.43360488,
+      "mean_intra_list_diversity": 0.775858218114676,
+      "mean_plot_raw": 0.11328763879835606
+    },
+    "0.8": {
+      "mean_content_score": 0.42775104999999997,
+      "mean_intra_list_diversity": 0.8083783872234379,
+      "mean_plot_raw": 0.11036819567903874
+    },
+    "0.6": {
+      "mean_content_score": 0.40775459999999997,
+      "mean_intra_list_diversity": 0.8439173100405697,
+      "mean_plot_raw": 0.10576080383732915
+    }
+  }
+}

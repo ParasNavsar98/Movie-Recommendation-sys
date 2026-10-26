@@ -33,3 +33,12 @@ dist-ssr
 
 #Movie Posters
 /movie_posters/
+
+# Python & Local SQLite Databases
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/

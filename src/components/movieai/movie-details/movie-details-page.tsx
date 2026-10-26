@@ -123,7 +123,7 @@ export function MovieDetailsPage({ movie }: MovieDetailsPageProps) {
 
         {/* 4. MORE LIKE THIS RECOMMENDATION CAROUSEL */}
         <div className="mt-14 border-t border-zinc-800/80 pt-8">
-          <SimilarMovies movies={similarMovies} />
+          <SimilarMovies movies={similarMovies} movieId={movie.id} />
         </div>
       </main>
     </div>
