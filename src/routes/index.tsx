@@ -6,10 +6,10 @@ import { ViewerTestimonialWall } from "@/components/movieai/viewer-testimonial-w
 import { FilmCinematicWord } from "@/components/movieai/film-cinematic-word";
 import { MaskGroup, MaskReveal } from "@/components/movieai/mask-reveal";
 import ShapeWaves from "@/components/ShapeWaves";
-import heroImage from "@/assets/cinematic-hero.jpg";
-import desertImage from "@/assets/cinematic-desert.jpg";
-import oceanImage from "@/assets/cinematic-ocean.jpg";
-import cityImage from "@/assets/cinematic-city.jpg";
+import heroImage from "@/assets/Exorcist.jpg";
+import desertImage from "@/assets/Dune-3.jpg";
+import oceanImage from "@/assets/Ramayana.jpg";
+import cityImage from "@/assets/DoomsDay.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
