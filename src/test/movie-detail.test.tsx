@@ -145,10 +145,10 @@ describe("Movie Details Routed Rendering", () => {
     const scrollToSpy = vi.spyOn(window, "scrollTo");
     scrollToSpy.mockClear();
 
-    const { getByText, getByRole } = await renderWithRouter("/movie/293660");
+    const { getAllByText, getByRole } = await renderWithRouter("/movie/293660");
 
     await waitFor(() => {
-      expect(getByText("Deadpool")).toBeDefined();
+      expect(getAllByText("Deadpool")[0]).toBeDefined();
     });
 
     // Clear initial navigation scroll call from router
@@ -183,6 +183,63 @@ describe("Movie Details Routed Rendering", () => {
     expect(scrollToSpy).not.toHaveBeenCalled();
 
     scrollToSpy.mockRestore();
+  });
+
+  it("plays real YouTube trailer for Interstellar (157336) on the same page and closes cleanly", async () => {
+    const { getByRole, getByTitle, queryByTitle } = await renderWithRouter("/movie/157336");
+
+    await waitFor(() => {
+      expect(getByRole("button", { name: /Play trailer for Interstellar/i })).toBeInTheDocument();
+    });
+
+    // 1. Click Play button
+    const playButton = getByRole("button", { name: /Play trailer for Interstellar/i });
+    fireEvent.click(playButton);
+
+    // 2. Embedded YouTube iframe must be rendered with Interstellar's exact video ID LY19rHKAaAg
+    await waitFor(() => {
+      const iframe = getByTitle("Trailer for Interstellar") as HTMLIFrameElement;
+      expect(iframe).toBeInTheDocument();
+      expect(iframe.src).toContain("LY19rHKAaAg");
+      expect(iframe.src).toContain("youtube-nocookie.com");
+      expect(iframe).toHaveAttribute("allowFullScreen");
+    });
+
+    // 3. Close button stops playback and restores the hero backdrop and Play button
+    const closeButton = getByRole("button", { name: /Close trailer/i });
+    fireEvent.click(closeButton);
+
+    await waitFor(() => {
+      expect(queryByTitle("Trailer for Interstellar")).not.toBeInTheDocument();
+      expect(getByRole("button", { name: /Play trailer for Interstellar/i })).toBeInTheDocument();
+    });
+  });
+
+  it("renders clear unavailable message for movie without trailer without rendering broken iframe", async () => {
+    const { getByRole, getByText, queryByTitle } = await renderWithRouter("/movie/where-we-go");
+
+    await waitFor(() => {
+      expect(getByRole("button", { name: /Play trailer/i })).toBeInTheDocument();
+    });
+
+    // Click play on movie without valid trailer link in CSV
+    const playButton = getByRole("button", { name: /Play trailer/i });
+    fireEvent.click(playButton);
+
+    await waitFor(() => {
+      // Must not render iframe
+      expect(queryByTitle(/Trailer for/i)).not.toBeInTheDocument();
+      // Must show clear unavailable state
+      expect(getByText(/Trailer unavailable for this movie/i)).toBeInTheDocument();
+    });
+
+    // Return to backdrop button restores original hero
+    const returnButton = getByRole("button", { name: /Return to Backdrop/i });
+    fireEvent.click(returnButton);
+
+    await waitFor(() => {
+      expect(getByRole("button", { name: /Play trailer/i })).toBeInTheDocument();
+    });
   });
 
   it("renders not-found state at /movie/non-existent-id", async () => {

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bookmark, Check, FolderPlus, Heart, Play, Star, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useMovieDemo } from "../demo-context";
+import { getMovieTrailer } from "@/lib/trailers";
 import { TrailerPlayer } from "./trailer-player";
 import type { MovieDetail } from "./types";
 
@@ -22,6 +23,17 @@ export function MovieHero({ movie }: MovieHeroProps) {
   const [isPlayingTrailer, setIsPlayingTrailer] = useState(false);
   const [posterError, setPosterError] = useState(false);
   const [collectionToast, setCollectionToast] = useState(false);
+
+  // Automatically stop playback when switching between movie detail pages
+  useEffect(() => {
+    setIsPlayingTrailer(false);
+  }, [movie.id]);
+
+  const effectiveTrailerUrl = useMemo(() => {
+    if (movie.trailerUrl) return movie.trailerUrl;
+    const record = getMovieTrailer(movie.id);
+    return record?.embedUrl ?? null;
+  }, [movie.id, movie.trailerUrl]);
 
   const isWatched = library.watched.includes(movie.id);
   const isWatchLater = library.watchlist.includes(movie.id);
@@ -76,7 +88,7 @@ export function MovieHero({ movie }: MovieHeroProps) {
       <div className="relative h-[380px] w-full overflow-hidden bg-[#0A0A0A] sm:h-[460px] md:h-[540px] lg:h-[600px]">
         {isPlayingTrailer ? (
           <TrailerPlayer
-            trailerUrl={movie.trailerUrl}
+            trailerUrl={effectiveTrailerUrl}
             posterUrl={posterSrc}
             title={movie.title}
             onClose={() => setIsPlayingTrailer(false)}

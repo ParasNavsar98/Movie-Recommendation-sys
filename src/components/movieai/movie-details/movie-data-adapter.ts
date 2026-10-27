@@ -1,5 +1,6 @@
 import { catalogueMovies, type CatalogueMovie } from "@/data/catalogue-data";
 import { mockMovies as discoverMovies, type Movie as DiscoverMovie } from "../discover-data";
+import { getMovieTrailer } from "@/lib/trailers";
 import trailerAsset from "@/assets/goodbye_web.webm";
 import type {
   CastMember,
@@ -96,7 +97,8 @@ export function resolveMovieDetail(movieId: string): MovieDetail | null {
       overview,
       budget: cat.budget,
       revenue: cat.revenue,
-      trailerUrl: trailerAsset,
+      trailerUrl: getMovieTrailer(cat.id)?.embedUrl || null,
+      trailerVideoId: getMovieTrailer(cat.id)?.videoId || null,
       hasPoster: cat.hasPoster,
     };
   }
@@ -126,7 +128,8 @@ export function resolveMovieDetail(movieId: string): MovieDetail | null {
       overview: disc.description,
       budget: null,
       revenue: null,
-      trailerUrl: trailerAsset,
+      trailerUrl: getMovieTrailer(disc.id)?.embedUrl || null,
+      trailerVideoId: getMovieTrailer(disc.id)?.videoId || null,
       hasPoster: true,
     };
   }

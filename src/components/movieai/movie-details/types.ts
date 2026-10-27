@@ -44,12 +44,16 @@ export interface UserReview {
   avatar: string;
   date: string;
   rating: RatingCategory;
+  stars?: number;
   content: string;
   likes: number;
   replies: number;
   spoiler?: boolean;
   following?: boolean;
   userLiked?: boolean;
+  isOwnReview?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface MovieMeterData {
@@ -58,6 +62,9 @@ export interface MovieMeterData {
   totalVotes: number;
   distribution: Record<RatingCategory, number>; // percentages 0-100
   voteCounts: Record<RatingCategory, number>;
+  averageRating?: number;
+  ratingCounts?: Record<number, number>;
+  ratingDistribution?: Record<number, number>;
 }
 
 export interface MovieDetail {
@@ -82,5 +89,6 @@ export interface MovieDetail {
   budget: number | null;
   revenue: number | null;
   trailerUrl: string | null;
+  trailerVideoId?: string | null;
   hasPoster: boolean;
 }
