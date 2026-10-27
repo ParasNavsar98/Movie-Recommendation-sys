@@ -4,6 +4,22 @@
  * Connects frontend discovery & explore experiences to the local FastAPI recommendation engine.
  */
 
+export interface AuthUser {
+  user_id: string;
+  name: string;
+  email: string;
+  created_at?: string;
+  last_login_at?: string | null;
+}
+
+export interface AuthResponse {
+  token: string;
+  user_id: string;
+  name: string;
+  email: string;
+  token_type: string;
+}
+
 export interface RecommendationItem {
   Movie_ID: number;
   Title: string;
@@ -102,14 +118,132 @@ export interface ApiMovieDetail {
   Movie_Description: string | null;
 }
 
+export interface ApiReviewItem {
+  review_id: string;
+  movie_id: number;
+  user_id: string;
+  author: string;
+  handle: string;
+  avatar: string;
+  rating: number;
+  sentiment: "skip" | "timepass" | "goforit" | "perfection";
+  content: string;
+  is_spoiler: boolean;
+  likes_count: number;
+  created_at: string;
+  updated_at: string;
+  user_liked?: boolean;
+  is_own_review?: boolean;
+}
+
+export interface ApiReviewListResponse {
+  movie_id: number;
+  total: number;
+  reviews: ApiReviewItem[];
+  limit?: number;
+  offset?: number;
+}
+
+export interface ApiReviewSummaryResponse {
+  movie_id: number;
+  total_votes: number;
+  positive_votes: number;
+  consensus_pct: number;
+  average_rating: number;
+  distribution: Record<"skip" | "timepass" | "goforit" | "perfection", number>;
+  vote_counts: Record<"skip" | "timepass" | "goforit" | "perfection", number>;
+  rating_counts: Record<string, number>;
+  rating_distribution: Record<string, number>;
+  // Backward and forward compatibility aliases
+  total_reviews?: number;
+  positive_reviews?: number;
+  sentiment_percentages?: Record<"skip" | "timepass" | "goforit" | "perfection", number>;
+  sentiment_distribution?: Record<"skip" | "timepass" | "goforit" | "perfection", number>;
+}
+
+export type MovieReviewItem = ApiReviewItem;
+export type MovieReviewListResponse = ApiReviewListResponse;
+export type MovieReviewSummary = ApiReviewSummaryResponse;
+
+export interface ReviewCreatePayload {
+  rating: number;
+  sentiment: "skip" | "timepass" | "goforit" | "perfection";
+  content: string;
+  is_spoiler?: boolean;
+}
+
+export interface ReviewUpdatePayload {
+  rating?: number;
+  sentiment?: "skip" | "timepass" | "goforit" | "perfection";
+  content?: string;
+  is_spoiler?: boolean;
+}
+
+export interface ReviewLikeResult {
+  status: string;
+  review_id: string;
+  active: boolean;
+  likes_count: number;
+  liked?: boolean;
+}
+
 // Fallback to local FastAPI recommendation engine
 const API_BASE_URL =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
+  (typeof import.meta !== "undefined" && (import.meta.env?.["VITE_API_URL"] as string | undefined)) ||
   "http://127.0.0.1:8000";
 
-const DEFAULT_USER_ID = "movieai_local_user";
+const AUTH_TOKEN_KEY = "movieai_auth_token_v1";
+const AUTH_USER_KEY = "movieai_auth_user_v1";
 
-class ApiError extends Error {
+export type AuthEvent = "unauthorized" | "logged_out" | "logged_in";
+type AuthStateListener = (event: AuthEvent) => void;
+const authListeners = new Set<AuthStateListener>();
+
+export function onAuthEvent(listener: AuthStateListener): () => void {
+  authListeners.add(listener);
+  return () => authListeners.delete(listener);
+}
+
+function notifyAuth(event: AuthEvent) {
+  authListeners.forEach((fn) => {
+    try {
+      fn(event);
+    } catch {
+      // ignore listener error
+    }
+  });
+}
+
+export function getStoredToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(AUTH_TOKEN_KEY);
+}
+
+export function getStoredUser(): AuthUser | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(AUTH_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setStoredAuth(token: string | null, user: AuthUser | null): void {
+  if (typeof window === "undefined") return;
+  if (token) {
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+  } else {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+  }
+  if (user) {
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(AUTH_USER_KEY);
+  }
+}
+
+export class ApiError extends Error {
   constructor(
     public status: number,
     message: string,
@@ -123,7 +257,7 @@ class ApiError extends Error {
 async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {},
-  userId: string = DEFAULT_USER_ID,
+  userId?: string,
   timeoutMs: number = 8000
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -131,8 +265,16 @@ async function apiRequest<T>(
   if (!headers.has("Content-Type") && options.body) {
     headers.set("Content-Type", "application/json");
   }
-  if (!headers.has("X-User-Id")) {
-    headers.set("X-User-Id", userId);
+
+  const token = getStoredToken();
+  if (token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  const storedUser = getStoredUser();
+  const effectiveUserId = userId || storedUser?.user_id;
+  if (effectiveUserId && !headers.has("X-User-Id")) {
+    headers.set("X-User-Id", effectiveUserId);
   }
 
   const controller = new AbortController();
@@ -155,6 +297,14 @@ async function apiRequest<T>(
       } catch {
         // fallback to text
       }
+
+      // If an authenticated request (bearing token) was rejected with 401,
+      // session is expired or invalid on the backend: invalidate stored token.
+      if (response.status === 401 && headers.has("Authorization")) {
+        setStoredAuth(null, null);
+        notifyAuth("unauthorized");
+      }
+
       throw new ApiError(response.status, detail);
     }
 
@@ -176,8 +326,62 @@ export const movieAiApi = {
     return API_BASE_URL;
   },
 
+  getStoredToken,
+  getStoredUser,
+  setStoredAuth,
+  onAuthEvent,
+  isAuthenticated(): boolean {
+    return Boolean(getStoredToken());
+  },
+
+  async register(data: { name: string; email: string; password: string }): Promise<AuthResponse> {
+    const res = await apiRequest<AuthResponse>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    setStoredAuth(res.token, {
+      user_id: res.user_id,
+      name: res.name,
+      email: res.email,
+    });
+    notifyAuth("logged_in");
+    return res;
+  },
+
+  async login(data: { email: string; password: string }): Promise<AuthResponse> {
+    const res = await apiRequest<AuthResponse>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    setStoredAuth(res.token, {
+      user_id: res.user_id,
+      name: res.name,
+      email: res.email,
+    });
+    notifyAuth("logged_in");
+    return res;
+  },
+
+  async logout(): Promise<void> {
+    const token = getStoredToken();
+    try {
+      if (token) {
+        await apiRequest<{ status: string }>("/auth/logout", { method: "POST" });
+      }
+    } catch {
+      // ignore
+    } finally {
+      setStoredAuth(null, null);
+      notifyAuth("logged_out");
+    }
+  },
+
+  async getMe(): Promise<AuthUser> {
+    return apiRequest<AuthUser>("/auth/me", { method: "GET" });
+  },
+
   async checkHealth(): Promise<HealthResponse> {
-    return apiRequest<HealthResponse>("/health", { method: "GET" }, DEFAULT_USER_ID, 3000);
+    return apiRequest<HealthResponse>("/health", { method: "GET" }, undefined, 3000);
   },
 
   async fetchFeed(options: {
@@ -213,7 +417,10 @@ export const movieAiApi = {
     );
   },
 
-  async fetchProfile(userId: string = DEFAULT_USER_ID): Promise<UserProfileState> {
+  async fetchProfile(userId?: string): Promise<UserProfileState> {
+    if (!userId && !getStoredToken()) {
+      throw new ApiError(401, "No active session for fetchProfile.");
+    }
     return apiRequest<UserProfileState>("/profile", { method: "GET" }, userId);
   },
 
@@ -224,7 +431,7 @@ export const movieAiApi = {
       favorite_genres?: string[];
       preferred_languages?: string[];
     },
-    userId: string = DEFAULT_USER_ID
+    userId?: string
   ): Promise<UserProfileState> {
     return apiRequest<UserProfileState>(
       "/profile",
@@ -236,7 +443,7 @@ export const movieAiApi = {
     );
   },
 
-  async toggleLike(movieId: number | string, userId: string = DEFAULT_USER_ID): Promise<InteractionResponse> {
+  async toggleLike(movieId: number | string, userId?: string): Promise<InteractionResponse> {
     const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
     return apiRequest<InteractionResponse>(
       "/interactions/like",
@@ -248,7 +455,7 @@ export const movieAiApi = {
     );
   },
 
-  async toggleDislike(movieId: number | string, userId: string = DEFAULT_USER_ID): Promise<InteractionResponse> {
+  async toggleDislike(movieId: number | string, userId?: string): Promise<InteractionResponse> {
     const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
     return apiRequest<InteractionResponse>(
       "/interactions/dislike",
@@ -260,7 +467,7 @@ export const movieAiApi = {
     );
   },
 
-  async toggleFavorite(movieId: number | string, userId: string = DEFAULT_USER_ID): Promise<InteractionResponse> {
+  async toggleFavorite(movieId: number | string, userId?: string): Promise<InteractionResponse> {
     const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
     return apiRequest<InteractionResponse>(
       "/interactions/favorite",
@@ -272,7 +479,7 @@ export const movieAiApi = {
     );
   },
 
-  async toggleWatchlist(movieId: number | string, userId: string = DEFAULT_USER_ID): Promise<InteractionResponse> {
+  async toggleWatchlist(movieId: number | string, userId?: string): Promise<InteractionResponse> {
     const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
     return apiRequest<InteractionResponse>(
       "/interactions/watchlist",
@@ -284,7 +491,7 @@ export const movieAiApi = {
     );
   },
 
-  async recordWatched(movieId: number | string, userId: string = DEFAULT_USER_ID): Promise<InteractionResponse> {
+  async recordWatched(movieId: number | string, userId?: string): Promise<InteractionResponse> {
     const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
     return apiRequest<InteractionResponse>(
       "/interactions/watched",
@@ -296,7 +503,7 @@ export const movieAiApi = {
     );
   },
 
-  async rateMovie(movieId: number | string, rating: number, userId: string = DEFAULT_USER_ID): Promise<InteractionResponse> {
+  async rateMovie(movieId: number | string, rating: number, userId?: string): Promise<InteractionResponse> {
     const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
     return apiRequest<InteractionResponse>(
       "/interactions/rate",
@@ -308,7 +515,10 @@ export const movieAiApi = {
     );
   },
 
-  async resetProfile(userId: string = DEFAULT_USER_ID): Promise<ResetResponse> {
+  async resetProfile(userId?: string): Promise<ResetResponse> {
+    if (!userId && !getStoredToken()) {
+      throw new ApiError(401, "No active session for resetProfile.");
+    }
     return apiRequest<ResetResponse>(
       "/profile/reset",
       {
@@ -328,5 +538,77 @@ export const movieAiApi = {
   async getMovieDetail(movieId: number | string): Promise<ApiMovieDetail> {
     const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
     return apiRequest<ApiMovieDetail>(`/movies/${cleanId}`, { method: "GET" });
+  },
+
+  async getMovieReviews(
+    movieId: number | string,
+    sort: string = "newest",
+    limit: number = 50,
+    offset: number = 0
+  ): Promise<ApiReviewListResponse> {
+    const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
+    return apiRequest<ApiReviewListResponse>(
+      `/movies/${cleanId}/reviews?sort=${sort}&limit=${limit}&offset=${offset}`,
+      { method: "GET" }
+    );
+  },
+
+  async getMovieReviewSummary(movieId: number | string): Promise<ApiReviewSummaryResponse> {
+    const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
+    return apiRequest<ApiReviewSummaryResponse>(`/movies/${cleanId}/reviews/summary`, {
+      method: "GET",
+    });
+  },
+
+  async getMyMovieReview(movieId: number | string): Promise<ApiReviewItem | null> {
+    const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
+    try {
+      return await apiRequest<ApiReviewItem>(`/movies/${cleanId}/reviews/me`, { method: "GET" });
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) {
+        return null;
+      }
+      throw err;
+    }
+  },
+
+  async createMovieReview(
+    movieId: number | string,
+    data: ReviewCreatePayload
+  ): Promise<ApiReviewItem> {
+    const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
+    return apiRequest<ApiReviewItem>(`/movies/${cleanId}/reviews`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  async updateMovieReview(
+    movieId: number | string,
+    reviewId: string,
+    data: ReviewUpdatePayload
+  ): Promise<ApiReviewItem> {
+    const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
+    return apiRequest<ApiReviewItem>(`/movies/${cleanId}/reviews/${reviewId}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  },
+
+  async deleteMovieReview(movieId: number | string, reviewId: string): Promise<void> {
+    const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
+    await apiRequest<{ status: string }>(`/movies/${cleanId}/reviews/${reviewId}`, {
+      method: "DELETE",
+    });
+  },
+
+  async toggleReviewLike(
+    movieId: number | string,
+    reviewId: string
+  ): Promise<ReviewLikeResult> {
+    const cleanId = typeof movieId === "string" ? parseInt(movieId, 10) : movieId;
+    return apiRequest<ReviewLikeResult>(`/movies/${cleanId}/reviews/${reviewId}/like`, {
+      method: "POST",
+    });
   },
 };
